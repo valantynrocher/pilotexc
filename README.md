@@ -1,2 +1,0 @@
-# pilotexc
-Pilotexc project
