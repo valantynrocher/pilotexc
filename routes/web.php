@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +14,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Redirect for root path
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('app.dashboard.index');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/tableau-de-bord', 'PilotexcApp\DashboardController@index')->name('app.dashboard.index');
+
+Route::get('/utilisateurs', 'PilotexcApp\UsersController@index')->name('app.users.index');
+
+Route::get('/ecritures', 'PilotexcApp\ScripturesController@index')->name('app.scriptures.index');
+
+Route::get('/paramètres', 'PilotexcApp\ParametersController@index')->name('app.parameters.index');
+Route::post('/paramètres/import-comptabilite-analytique', 'PilotexcApp\ParametersController@analyticImport')->name('app.parameters.analytic.import');
+
+// Route::namespace('PilotexcApp')->prefix('app')->name('app.')->group(function () {
+
+// });
+
+// Route::namespace('PilotexcAdmin')->prefix('admin')->name('admin.')->group(function () {
+
+// });
