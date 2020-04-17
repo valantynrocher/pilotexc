@@ -33,6 +33,8 @@
 
         <!-- Custom style -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+        @yield('styles')
     </head>
 
     <body class="hold-transition sidebar-mini layout-fixed">
@@ -54,7 +56,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link" data-toggle="dropdown" href="#">
                             <img src="{{ asset('img/logo.png') }}" class="navbar-logo float-left mr-2" alt="Logo de l'entreprise">
-                            <span class="user-name">{{ Auth::user()->name }}</span>
+                            <span>Utilisateur {{-- {{ Auth::user()->name }}--}}</span>
                             <i class="fas fa-sort-down ml-2"></i>
                         </a>
 
@@ -85,6 +87,11 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="#">
+                            <span>Aide ?</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- /.navbar -->
@@ -105,28 +112,49 @@
                             <!-- Add icons to the links using the .nav-icon class
                                 with font-awesome or any other icon font library -->
                             <li class="nav-item">
-                                <a href="{{ route('app.dashboard.index') }}" class="nav-link">
+                                <a href="{{ route('dashboard.index') }}" class="nav-link">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     <p>Tableau de bord</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('app.users.index') }}" class="nav-link">
+                                <a href="{{ route('users.index') }}" class="nav-link">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>Utilisateurs</p>
                                 </a>
                             </li>
 
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                  <i class="nav-icon fas fa-list"></i>
+                                  <p>Plans de compte <i class="right fas fa-angle-left"></i></p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                  <li class="nav-item">
+                                    <a href="{{ route('analyticAccounts.index') }}" class="nav-link">
+                                      <i class="fas fa-angle-right"></i>
+                                      <p>Analytique</p>
+                                    </a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a href="{{ route('generalAccounts.index') }}" class="nav-link">
+                                      <i class="fas fa-angle-right"></i>
+                                      <p>Générale</p>
+                                    </a>
+                                  </li>
+                                </ul>
+                            </li>
+
                             <li class="nav-item">
-                                <a href="{{ route('app.parameters.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-sliders-h"></i>
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cogs"></i>
                                     <p>Paramètres</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('app.scriptures.index') }}" class="nav-link">
+                                <a href="{{ route('scriptures.index') }}" class="nav-link">
                                     <i class="nav-icon fas fa-table"></i>
                                     <p>Gestion des écritures</p>
                                 </a>
@@ -153,21 +181,24 @@
             </aside>
 
             <!-- Content Wrapper -->
-            <div class="content-wrapper">
+            <div class="content-wrapper p-3">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
+                        <div class="row mb-5">
+                            <div class="col">
                                 <h1>@yield('title')</h1>
                             </div>
                         </div>
                     </div><!-- /.container-fluid -->
                 </section>
 
-                <!-- page content -->
-                @yield('content')
-                <!-- /. page content -->
+                <!-- Content Header (Page header) -->
+                <section class="content-body">
+                    <!-- page content -->
+                    @yield('content')
+                    <!-- /. page content -->
+                </section>
             </div>
             <!-- /.content-wrapper -->
 
@@ -183,39 +214,52 @@
 
         <!-- jQuery -->
         <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+
         <!-- jQuery UI 1.11.4 -->
         <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-        <script>
-        $.widget.bridge('uibutton', $.ui.button)
-        </script>
+
         <!-- Bootstrap 4 -->
         <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
         <!-- ChartJS -->
         <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+
         <!-- Sparkline -->
         <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
+
         <!-- JQVMap -->
         <script src="{{ asset('plugins/jqvmap/jquery.vmap.min.js') }}"></script>
         <script src="{{ asset('plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+
         <!-- jQuery Knob Chart -->
         <script src="{{ asset('plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+
         <!-- daterangepicker -->
         <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
         <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
+
         <!-- Tempusdominus Bootstrap 4 -->
         <script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
         <!-- Summernote -->
         <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
+
         <!-- overlayScrollbars -->
         <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+
         <!-- AdminLTE App -->
         <script src="{{ asset('js/adminlte.js') }}"></script>
+
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script src="{{ asset('js/pages/dashboard.js') }}"></script>
+
         <!-- AdminLTE for demo purposes -->
         <script src="{{ asset('js/demo.js') }}"></script>
 
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
         @yield('script')
     </body>
 </html>

@@ -13,7 +13,7 @@ class CreateGeneralAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql2')->create('general_accounts', function (Blueprint $table) {
+        Schema::create('general_accounts', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('account_subclass_id')->unsigned();
             $table->string('name');
@@ -34,6 +34,6 @@ class CreateGeneralAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql2')->dropIfExists('general_accounts');
+        Schema::dropIfExists('general_accounts');
     }
 }

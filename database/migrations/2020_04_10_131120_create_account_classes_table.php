@@ -13,7 +13,7 @@ class CreateAccountClassesTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql2')->create('account_classes', function (Blueprint $table) {
+        Schema::create('account_classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->enum('summary_report', ['Bilan', 'Compte de résultat']);
@@ -27,6 +27,6 @@ class CreateAccountClassesTable extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql2')->dropIfExists('account_classes');
+        Schema::dropIfExists('account_classes');
     }
 }

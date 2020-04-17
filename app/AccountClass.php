@@ -4,10 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AccountSubclass extends Model
+class AccountClass extends Model
 {
-    protected $connection = 'mysql2';
-
     protected $table = 'account_classes';
 
     public $incrementing = false;

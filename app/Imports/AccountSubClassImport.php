@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
-use App\AnalyticAccount;
+use App\AccountSubclass;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class AnalyticAccountsImport implements ToModel
+class AccountSubClassImport implements ToModel
 {
     /**
     * @param array $row
@@ -14,13 +14,12 @@ class AnalyticAccountsImport implements ToModel
     */
     public function model(array $row)
     {
-        return new AnalyticAccount([
+        return new AccountSubclass([
             'id' => $row[0],
             'name' => $row[1],
-            'service' => $row[2],
-            'sector' => $row[3],
-            'folder' => $row[4],
-            'structure' => $row[5]
+            'account_class_id' => $row[2],
+            'detailed_result_level' => $row[3],
+            'compact_result_level' => $row[4]
         ]);
     }
 }
