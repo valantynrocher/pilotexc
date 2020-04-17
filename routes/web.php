@@ -16,24 +16,30 @@ use Illuminate\Support\Facades\Route;
 
 // Redirect for root path
 Route::get('/', function () {
-    return redirect()->route('app.dashboard.index');
+    return redirect()->route('dashboard.index');
 });
 
 Auth::routes();
 
-Route::get('/tableau-de-bord', 'PilotexcApp\DashboardController@index')->name('app.dashboard.index');
+Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard.index');
 
-Route::get('/utilisateurs', 'PilotexcApp\UsersController@index')->name('app.users.index');
+Route::get('utilisateurs', 'UsersController@index')->name('users.index');
 
-Route::get('/ecritures', 'PilotexcApp\ScripturesController@index')->name('app.scriptures.index');
+// Attention : les changements d'URL sur ces routes pètent les appels Ajax
+Route::get('comptabilite-analytique', 'AnalyticAccountsController@index')->name('analyticAccounts.index');
+Route::post('comptabilite-analytique', 'AnalyticAccountsController@store')->name('analyticAccounts.store');
+Route::patch('comptabilite-analytique/edit/{id}', 'AnalyticAccountsController@update')->name('analyticAccounts.update');
+Route::post('comptabilite-analytique/activate', 'AnalyticAccountsController@activate')->name('analyticAccounts.activate');
+Route::post('comptabilite-analytique/desactivate', 'AnalyticAccountsController@desactivate')->name('analyticAccounts.desactivate');
+// Attention : les changements d'URL sur ces routes pètent les appels Ajax
+Route::get('comptabilite-generale', 'GeneralAccountsController@index')->name('generalAccounts.index');
+Route::post('comptabilite-generale', 'GeneralAccountsController@store')->name('generalAccounts.store');
+Route::patch('comptabilite-generale/edit/{id}', 'GeneralAccountsController@update')->name('generalAccounts.update');
+Route::post('comptabilite-generale/activate', 'GeneralAccountsController@activate')->name('generalAccounts.activate');
+Route::post('comptabilite-generale/desactivate', 'GeneralAccountsController@desactivate')->name('generalAccounts.desactivate');
 
-Route::get('/paramètres', 'PilotexcApp\ParametersController@index')->name('app.parameters.index');
-Route::post('/paramètres/import-comptabilite-analytique', 'PilotexcApp\ParametersController@analyticImport')->name('app.parameters.analytic.import');
 
-// Route::namespace('PilotexcApp')->prefix('app')->name('app.')->group(function () {
+Route::get('paramètres', 'ParametersController@index')->name('parameters.index');
 
-// });
+Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
 
-// Route::namespace('PilotexcAdmin')->prefix('admin')->name('admin.')->group(function () {
-
-// });

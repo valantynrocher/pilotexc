@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnalyticAccount extends Model
 {
-    protected $connection = 'mysql2';
-
     protected $table = 'analytic_accounts';
 
     public $incrementing = false;
@@ -16,7 +14,7 @@ class AnalyticAccount extends Model
 
     public $timestamps = false;
 
-    public $fillable = ['analytic_section','name', 'service', 'sector', 'folder', 'structure'];
+    public $fillable = ['id','name', 'service', 'sector', 'folder', 'structure', 'in_charge_id'];
 
     // RELATIONS
     public function analyticEntries()

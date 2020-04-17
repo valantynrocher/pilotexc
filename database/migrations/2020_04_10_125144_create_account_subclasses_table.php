@@ -13,12 +13,12 @@ class CreateAccountSubclassesTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql2')->create('account_subclasses', function (Blueprint $table) {
+        Schema::create('account_subclasses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->bigInteger('account_class_id')->unsigned();
-            $table->enum('detailed_result_level', ['R_Exploitation', 'R_Financier', 'R_Exceptionnel']);
-            $table->enum('compact_result_level', ['R_Courant', 'R_Exceptionnel']);
+            $table->enum('detailed_result_level', ['R_Exploitation', 'R_Financier', 'R_Exceptionnel', 'R_CVN'])->nullable();
+            $table->enum('compact_result_level', ['R_Courant', 'R_Exceptionnel', 'R_CVN'])->nullable();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateAccountSubclassesTable extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql2')->dropIfExists('account_subclasses');
+        Schema::dropIfExists('account_subclasses');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\PilotexcApp;
+namespace App\Http\Controllers;
 
 use App\AnalyticAccount;
 use Illuminate\Http\Request;
@@ -15,10 +15,10 @@ class ScripturesController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /**
      *
@@ -27,6 +27,6 @@ class ScripturesController extends Controller
      */
     public function index()
     {
-        return view('pilotexcApp.scriptures.index');
+        return view('scriptures.index');
     }
 }

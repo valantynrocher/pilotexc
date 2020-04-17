@@ -2,12 +2,11 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class AnalyticEntry extends Model
 {
-    protected $connection = 'mysql2';
-
     protected $table = 'analytic_entries';
 
     public $incrementing = true;
@@ -16,7 +15,13 @@ class AnalyticEntry extends Model
 
     public $timestamps = false;
 
-    public $fillable = ['analytic_account_id', ];
+    public $fillable = ['analytic_account_id', 'general_account_id', 'date_entry', 'journal', 'piece_nb', 'name', 'debit_amount', 'credit_amount', 'type_id'];
+
+    protected $dates = [
+        'date_entry'
+    ];
+
+    protected $dateFormat = 'dd/mm/yyyy';
 
     // RELATIONS
     public function analyticAccount()

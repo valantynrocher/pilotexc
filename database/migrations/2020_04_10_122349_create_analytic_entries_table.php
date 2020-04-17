@@ -13,7 +13,7 @@ class CreateAnalyticEntriesTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql2')->create('analytic_entries', function (Blueprint $table) {
+        Schema::create('analytic_entries', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('analytic_account_id')->unsigned();
             $table->bigInteger('general_account_id')->unsigned();
@@ -23,7 +23,7 @@ class CreateAnalyticEntriesTable extends Migration
             $table->string('name')->nullable();
             $table->decimal('debit_amount', 15, 6)->nullable();
             $table->decimal('credit_amount', 15, 6)->nullable();
-            $table->bigInteger('entry_type_id')->unsigned();
+            $table->bigInteger('entry_type_id')->unsigned()->nullable();
         });
     }
 
@@ -34,6 +34,6 @@ class CreateAnalyticEntriesTable extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql2')->dropIfExists('analytic_entries');
+        Schema::dropIfExists('analytic_entries');
     }
 }

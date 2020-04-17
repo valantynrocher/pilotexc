@@ -13,7 +13,7 @@ class CreateAnalyticAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql2')->create('analytic_accounts', function (Blueprint $table) {
+        Schema::create('analytic_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('service');
@@ -32,6 +32,6 @@ class CreateAnalyticAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('mysql2')->dropIfExists('analytic_accounts');
+        Schema::dropIfExists('analytic_accounts');
     }
 }

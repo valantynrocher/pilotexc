@@ -1,29 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\PilotexcApp;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class UsersController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /**
-     *
+     * Show the application dashboard (Home page).
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('pilotexcApp.users.index');
+        return view('dashboard.index');
     }
 }
