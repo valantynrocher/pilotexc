@@ -23,7 +23,8 @@ class CreateAnalyticEntriesTable extends Migration
             $table->string('name')->nullable();
             $table->decimal('debit_amount', 15, 6)->nullable();
             $table->decimal('credit_amount', 15, 6)->nullable();
-            $table->bigInteger('entry_type_id')->unsigned()->nullable();
+            $table->enum('entry_type', ['Situation', 'Réalisé', 'Prévisionnel']);
+            $table->bigInteger('client_id')->unsigned()->nullable();
         });
     }
 

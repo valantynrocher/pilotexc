@@ -17,9 +17,9 @@ class AccountSubclass extends Model
     public $fillable = ['id', 'name', 'account_class_id', 'detailed_result_level', 'compact_result_level'];
 
     // RELATIONS
-    public function accountEntries()
+    public function generalAccounts()
     {
-        return $this->hasMany('App\AccountEntry');
+        return $this->hasMany('App\GeneralAccount');
     }
 
     public function accountClass()

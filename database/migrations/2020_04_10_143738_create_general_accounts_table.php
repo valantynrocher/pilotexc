@@ -17,13 +17,9 @@ class CreateGeneralAccountsTable extends Migration
             $table->id();
             $table->bigInteger('account_subclass_id')->unsigned();
             $table->string('name');
-            $table->string('cerfa_group1');
-            $table->string('cerfa_line1');
-            $table->string('cerfa_group2');
-            $table->string('cerfa_line2');
-            $table->string('cerfa_group3');
-            $table->string('cerfa_line3');
+            $table->bigInteger('cerfa1_line_id')->unsigned()->nullable();
             $table->boolean('active')->default(1);
+            $table->bigInteger('client_id')->unsigned()->nullable();
         });
     }
 

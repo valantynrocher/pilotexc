@@ -16,12 +16,11 @@ class CreateAnalyticAccountsTable extends Migration
         Schema::create('analytic_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('service');
-            $table->string('sector');
-            $table->string('folder');
-            $table->string('structure');
-            $table->bigInteger('in_charge_id')->unsigned()->nullable();
             $table->boolean('active')->default(1);
+            $table->bigInteger('service_id')->unsigned()->nullable();
+            $table->bigInteger('structure_id')->unsigned()->nullable();
+            $table->bigInteger('in_charge_id')->unsigned()->nullable();
+            $table->bigInteger('client_id')->unsigned()->nullable();
         });
     }
 

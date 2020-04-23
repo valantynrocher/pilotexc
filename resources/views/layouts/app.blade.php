@@ -147,16 +147,16 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-cogs"></i>
-                                    <p>Paramètres</p>
+                                <a href="{{ route('scriptures.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>Gestion des écritures</p>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('scriptures.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
-                                    <p>Gestion des écritures</p>
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cogs"></i>
+                                    <p>Paramètres</p>
                                 </a>
                             </li>
 

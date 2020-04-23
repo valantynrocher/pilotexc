@@ -14,12 +14,22 @@ class GeneralAccount extends Model
 
     public $timestamps = false;
 
-    public $fillable = ['id', 'account_subclass_id', 'name', 'cerfa_group1',
-    'cerfa_line1', 'cerfa_group2', 'cerfa_line2', 'cerfa_group3',
-    'cerfa_line3', 'active'];
+    public $fillable = ['id', 'account_subclass_id', 'name',
+    'cerfa1_line_id', 'active', 'client_id'];
 
+    // RELATIONS
     public function analyticEntries()
     {
         return $this->hasMany('App\AnalyticEntry');
+    }
+
+    public function accountSubclass()
+    {
+        return $this->belongsTo('App\AccountSubclass');
+    }
+
+    public function cerfa1Line()
+    {
+        return $this->belongsTo('App\Cerfa1Line');
     }
 }

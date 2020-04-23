@@ -175,7 +175,7 @@
         </div>
     </div>
 </section>
-<!-- /.content -->
+
 
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" style="display: none;" aria-hidden="true">
@@ -263,8 +263,6 @@
         </div>
     </div>
 </div>
-
-<!-- Import Modal -->
 
 
 <!-- Activate Modal -->
