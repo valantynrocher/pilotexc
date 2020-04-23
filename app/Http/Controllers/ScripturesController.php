@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\AnalyticAccount;
-use Illuminate\Http\Request;
+use App\AnalyticEntry;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\AnalyticAccountsImport;
 
 class ScripturesController extends Controller
 {
@@ -27,6 +24,9 @@ class ScripturesController extends Controller
      */
     public function index()
     {
-        return view('scriptures.index');
+        $datas = AnalyticEntry::all();
+        return view('scriptures.index', [
+            'datas' => $datas
+        ]);
     }
 }

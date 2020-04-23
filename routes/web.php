@@ -31,6 +31,8 @@ Route::post('comptabilite-analytique', 'AnalyticAccountsController@store')->name
 Route::patch('comptabilite-analytique/edit/{id}', 'AnalyticAccountsController@update')->name('analyticAccounts.update');
 Route::post('comptabilite-analytique/activate', 'AnalyticAccountsController@activate')->name('analyticAccounts.activate');
 Route::post('comptabilite-analytique/desactivate', 'AnalyticAccountsController@desactivate')->name('analyticAccounts.desactivate');
+Route::get('getSectors', 'AnalyticAccountsController@getSectors')->name('analyticAccounts.getSectors');
+Route::get('getServices', 'AnalyticAccountsController@getServices')->name('analyticAccounts.getServices');
 // Attention : les changements d'URL sur ces routes pètent les appels Ajax
 Route::get('comptabilite-generale', 'GeneralAccountsController@index')->name('generalAccounts.index');
 Route::post('comptabilite-generale', 'GeneralAccountsController@store')->name('generalAccounts.store');

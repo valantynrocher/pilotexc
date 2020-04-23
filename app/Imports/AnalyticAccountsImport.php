@@ -17,10 +17,8 @@ class AnalyticAccountsImport implements ToModel
         return new AnalyticAccount([
             'id' => $row[0],
             'name' => $row[1],
-            'service' => $row[2],
-            'sector' => $row[3],
-            'folder' => $row[4],
-            'structure' => $row[5]
+            'service_id' => $row[2],
+            'structure_id' => $row[3]
         ]);
     }
 }

@@ -112,7 +112,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($datas as $row)
+                        @foreach ($accounts as $row)
                             <tr>
                                 <td class="align-middle" id="selectCell"><input type="checkbox" class="checkAccount" value="{{ $row->id }}"></td>
                                 <td class="align-middle">{{ $row->id }}</td>
@@ -124,10 +124,10 @@
                                     @endif
                                     {{ $row->name }}
                                 </td>
-                                <td class="align-middle">{{ $row->service }}</td>
-                                <td class="align-middle">{{ $row->sector }}</td>
-                                <td class="align-middle">{{ $row->folder }}</td>
-                                <td class="align-middle">{{ $row->structure }}</td>
+                                <td class="align-middle">{{ $row->service->name }}</td>
+                                <td class="align-middle">{{ $row->service->sector->name }}</td>
+                                <td class="align-middle">{{ $row->service->sector->folder->name }}</td>
+                                <td class="align-middle">{{ $row->structure->name }}</td>
                                 <td class="text-center align-middle">
                                     <span class="invisible">{{ $row->active }}</span>
                                 </td>
@@ -176,40 +176,50 @@
                     @csrf
 
                     <div class="row">
-                        <div class="col-md-3 form-group">
-                            <label for="addId">Code</label>
-                            <input type="number" name="id" id="addId" class="form-control" required>
-                            <small>Saisir un numéro non présent dans votre plan de compte actuel</small>
-                        </div>
-                        <div class="col-md-7 form-group">
-                            <label for="addName">Libellé de compte</label>
-                            <input type="text" name="name" id="addName" class="form-control" required>
-                        </div>
-                        <div class="col-md-2 form-group p-4">
+                        <div class="col-lg-2 col-4 form-group p-4">
                             <div class="custom-control custom-switch custom-switch-off-normal custom-switch-on-info">
                                 <input type="checkbox" name="active" class="custom-control-input" id="addActive" value="1">
                                 <label class="custom-control-label" for="addActive">Actif</label>
                             </div>
                         </div>
+                        <div class="col-lg-3 col-8 form-group">
+                            <label for="addId">Code</label>
+                            <input type="number" name="id" id="addId" class="form-control" required>
+                            <small>Saisir un code non présent dans votre plan de compte.</small>
+                        </div>
+                        <div class="col-lg-7 col-sm-12 form-group">
+                            <label for="addName">Libellé de compte</label>
+                            <input type="text" name="name" id="addName" class="form-control" required>
+                        </div>
+
                     </div>
                     <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="addService">Service</label>
-                            <input type="text" name="service" id="addService" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="addSector">Secteur</label>
-                            <input type="text" name="sector" id="addSector" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="addFolder">Dossier</label>
-                            <input type="text" name="folder" id="addFolder" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-lg-6 form-group">
                             <label for="addStructure">Structure</label>
-                            <input type="text" name="structure" id="addStructure" class="form-control">
+                            <select name="structure_id" id="addStructure" class="custom-select">
+                                @foreach ($structures as $structure)
+                                    <option value="{{ $structure->id }}">{{ $structure->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="folder">Dossier</label>
+                            <select name="folder" id="folder" class="custom-select">
+                                <option value="0" selected>Sélectionner un dossier...</option>
+                                @foreach ($folders as $folder)
+                                    <option value="{{ $folder->id }}">{{ $folder->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="sector">Secteur</label>
+                            <select name="sector" id="sector" class="custom-select" disabled>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="service">Service</label>
+                            <select name="service_id" id="service" class="custom-select" disabled>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -499,6 +509,68 @@
                 } else {
                     modal.find('.modal-body #addActive').val(0)
                 }
+            })
+
+            // Get Sectors options while changing folder
+            $('#folder').on('change', function() {
+                let folder_id = $(this).val()
+                let op = ''
+
+                if (folder_id == 0) {
+                    $('#sector').prop("disabled", true)
+                    $('#service').prop("disabled", true)
+                } else {
+                    $('#sector').prop("disabled", false)
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getSectors',
+                    data: {'id': folder_id},
+                    success: function(sectors) {
+                        op += '<option value="0" selected>Sélectionner un secteur</option>'
+                        sectors.forEach(sector => {
+                            op += '<option value="' + sector.id + '">' + sector.name + '</option>'
+                        });
+
+                        $('#sector').html('')
+                        $('#sector').append(op)
+                    },
+                    error:function(){
+
+                    }
+                })
+            })
+
+            // Get Services options while changing sector
+            $('#sector').on('change', function() {
+                let sector_id = $(this).val()
+                let folder_id = $('#folder').val()
+                let op = ''
+
+                if (sector_id == 0) {
+                    $('#service').prop("disabled", true)
+                } else {
+                    $('#service').prop("disabled", false)
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getServices',
+                    data: {'id': sector_id},
+                    success: function(services) {
+                        op += '<option selected>Sélectionner un service</option>'
+                        services.forEach(service => {
+                            op += '<option value="' + service.id + '">' + service.name + '</option>'
+                        });
+
+                        $('#service').html('')
+                        $('#service').append(op)
+                    },
+                    error:function(){
+
+                    }
+                })
             })
 
             $('#addForm').on('submit', function(e) {

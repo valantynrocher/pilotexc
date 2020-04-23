@@ -10,15 +10,23 @@ class AnalyticAccount extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'id';
-
     public $timestamps = false;
 
-    public $fillable = ['id','name', 'service', 'sector', 'folder', 'structure', 'in_charge_id'];
+    public $fillable = ['id','name', 'active', 'service_id', 'structure_id', 'in_charge_id', 'client_id'];
 
     // RELATIONS
     public function analyticEntries()
     {
         return $this->hasMany('App\AnalyticEntry');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo('App\Service');
+    }
+
+    public function structure()
+    {
+        return $this->belongsTo('App\Structure');
     }
 }

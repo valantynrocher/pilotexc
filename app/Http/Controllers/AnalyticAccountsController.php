@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Structure;
 use App\AnalyticAccount;
+use App\Folder;
+use App\Sector;
+use App\Service;
 use Illuminate\Http\Request;
 
 class AnalyticAccountsController extends Controller
@@ -14,10 +18,28 @@ class AnalyticAccountsController extends Controller
      */
     public function index()
     {
-        $datas = AnalyticAccount::all();
+        $accounts = AnalyticAccount::all();
+        $folders = Folder::all();
+        $structures = Structure::all();
         return view('analyticAccounts.index', [
-            'datas' => $datas
+            'accounts' => $accounts,
+            'folders' => $folders,
+            'structures' => $structures
         ]);
+    }
+
+    public function getSectors(Request $request)
+    {
+        $sectors = Sector::where('folder_id', $request->id)->get();
+
+        return response()->json($sectors);
+    }
+
+    public function getServices(Request $request)
+    {
+        $services = Service::where('sector_id', $request->id)->get();
+
+        return response()->json($services);
     }
 
 
@@ -33,10 +55,9 @@ class AnalyticAccountsController extends Controller
 
         $analyticAccount->id = $request->input('id');
         $analyticAccount->name = $request->input('name');
-        $analyticAccount->service = $request->input('service');
-        $analyticAccount->sector = $request->input('sector');
-        $analyticAccount->folder = $request->input('folder');
-        $analyticAccount->structure = $request->input('structure');
+        $analyticAccount->active = $request->input('active');
+        $analyticAccount->structure_id = $request->input('structure_id');
+        $analyticAccount->service_id = $request->input('service_id');
 
         $analyticAccount->save();
     }
@@ -54,11 +75,9 @@ class AnalyticAccountsController extends Controller
         $analyticAccount = AnalyticAccount::find($id);
 
         $analyticAccount->name = $request->input('name');
-        $analyticAccount->service = $request->input('service');
-        $analyticAccount->sector = $request->input('sector');
-        $analyticAccount->folder = $request->input('folder');
-        $analyticAccount->structure = $request->input('structure');
         $analyticAccount->active = $request->input('active');
+        $analyticAccount->structure_id = $request->input('structure_id');
+        $analyticAccount->service_id = $request->input('service_id');
 
         $analyticAccount->save();
     }
