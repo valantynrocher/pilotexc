@@ -15,7 +15,7 @@ class AnalyticAccount extends Model
     public $fillable = ['id','name', 'active', 'service_id', 'structure_id', 'in_charge_id', 'client_id'];
 
     // RELATIONS
-    public function analyticEntries()
+    public function analytic_entries()
     {
         return $this->hasMany('App\AnalyticEntry');
     }

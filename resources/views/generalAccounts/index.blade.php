@@ -53,7 +53,8 @@
                             <h6>Actions sur sélection en cours</h6>
                         </div>
                         <div class="mb-2">
-                            <button type="button" id="affectBtn" class="select-action btn btn-info disabled">
+                            <button type="button" id="affectBtn" class="select-action btn btn-info disabled"
+                            data-target="#affectModal" data-toggle="modal">
                                 <i class="fas fa-folder-open mr-2"></i>Affecter
                             </button>
                         </div>
@@ -105,19 +106,17 @@
                             <th>Sous-classe de compte</th>
                             <th>Libellé</th>
                             <th>Actif</th>
-                            <th class="text-center">CERFA 1</th>
-                            <th class="text-center">CERFA 2</th>
-                            <th class="text-center">CERFA 3</th>
+                            <th>CERFA 1</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($datas as $row)
-                            <tr id="{{ $row->id }}">
-                                <td class="align-middle" id="selectCell"><input type="checkbox" class="checkAccount" value="{{ $row->id }}"></td>
-                                <td class="align-middle">{{ $row->id }}</td>
-                                <td class="align-middle">{{ $row->account_subclass_id }}</td>
-                                <td class="align-middle">
+                        @foreach ($accounts as $row)
+                            <tr data-id="{{ $row->id }}">
+                                <td class="align-middle selection-cell checkbox-cell" id="selectCell"><input type="checkbox" class="checkAccount" value="{{ $row->id }}"></td>
+                                <td class="align-middle selection-cell">{{ $row->id }}</td>
+                                <td class="align-middle selection-cell">{{ $row->account_subclass_id }}</td>
+                                <td class="align-middle selection-cell">
                                     @if ($row->active === 1)
                                         <span class="badge badge-success mr-2">Actif</span>
                                     @else
@@ -125,33 +124,19 @@
                                     @endif
                                     {{ $row->name }}
                                 </td>
-                                <td class="text-center align-middle">
+                                <td class="text-center align-middle selection-cell">
                                     <span class="invisible">{{ $row->active }}</span>
                                 </td>
-                                <td class="text-center align-middle">
-                                    @if ($row->cerfa_line1 != null && $row->cerfa_group1 != null)
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    @else
-                                        <i class="fas fa-times-circle text-danger"></i>
-                                    @endif
+                                <td class="align-middle selection-cell">
+                                    <small>Groupe : </small>{{ $row->cerfa1Line['cerfa1Group']['name'] }}<br>
+                                    <small>Ligne : </small>{{ $row->cerfa1Line['name'] }}
                                 </td>
-                                <td class="text-center align-middle">
-                                    @if ($row->cerfa_line2 != null && $row->cerfa_group2 != null)
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    @else
-                                        <i class="fas fa-times-circle text-danger"></i>
-                                    @endif
-                                </td>
-                                <td class="text-center align-middle">
-                                    @if ($row->cerfa_line3 != null && $row->cerfa_group3 != null)
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    @else
-                                        <i class="fas fa-times-circle text-danger"></i>
-                                    @endif
-                                </td>
-                                <td class="align-middle text-center">
-                                    <a class="btn bg-teal btn-sm m-2" href="#editModal" data-toggle="modal" data-object="{{ $row }}">
-                                        <i class="fas fa-pencil-alt mr-1"></i> Éditer
+                                <td class="align-middle text-center actions-cell">
+                                    <a class="btn bg-teal btn-sm m-2" href="#editModal" id="editAccountBtn" data-toggle="modal" data-object="{{ $row }}">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-outline-danger btn-sm m-2" href="#deleteModal" id="deleteAccountBtn" data-toggle="modal" data-id="{{ $row->id }}">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -164,9 +149,7 @@
                             <th>Sous-classe de compte</th>
                             <th>Libellé</th>
                             <th>Actif</th>
-                            <th class="text-center">CERFA 1</th>
-                            <th class="text-center">CERFA 2</th>
-                            <th class="text-center">CERFA 3</th>
+                            <th>CERFA 1</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </tfoot>
@@ -216,47 +199,24 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label for="addGroupCerfa1">Groupe</label>
-                            <input type="text" name="cerfa_group1" id="addGroupCerfa1" class="form-control">
+                            <label for="addCerfa1Group">Groupe</label>
+                            <select name="cerfa1_group" id="addCerfa1Group" class="custom-select">
+                                <option value="0" selected>Sélectionner un groupe...</option>
+                                @foreach ($cerfa1Groups as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label for="addLineCerfa1">Ligne</label>
-                            <input type="text" name="cerfa_line1" id="addLineCerfa1" class="form-control">
+                            <label for="addCerfa1Line">Ligne</label>
+                            <select name="cerfa1_line_id" id="addCerfa1Line" class="custom-select" disabled>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="form-group mb-2">
-                        Regroupement CERFA 2
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="addGroupCerfa2">Groupe</label>
-                            <input type="text" name="cerfa_group2" id="addGroupCerfa2" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="addLineCerfa2">Ligne</label>
-                            <input type="text" name="cerfa_line2" id="addLineCerfa2" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        Regroupement CERFA 3
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="addGroupCerfa3">Groupe</label>
-                            <input type="text" name="cerfa_group3" id="addGroupCerfa3" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="addLineCerfa3">Ligne</label>
-                            <input type="text" name="cerfa_line3" id="addLineCerfa3" class="form-control">
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-primary">Créer</button>
                 </div>
             </form>
@@ -264,9 +224,54 @@
     </div>
 </div>
 
+<!-- Affect Modal -->
+<div class="modal fade" id="affectModal" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Affecter la sélection de comptes</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
 
-<!-- Activate Modal -->
-<div class="modal fade" id="activateToggleModal">
+            <form id="affectForm">
+                <div class="modal-body">
+                    <p></p>
+                    <div class="selected-rows-list"></div>
+                    @csrf
+                    <div class="form-group mb-2">
+                        Regroupement CERFA 1
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="affectCerfa1Group">Groupe</label>
+                            <select name="cerfa1_group" id="affectCerfa1Group" class="custom-select">
+                                <option value="0" selected>Sélectionner un groupe...</option>
+                                @foreach ($cerfa1Groups as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="affectCerfa1Line">Ligne</label>
+                            <select name="cerfa1_line_id" id="affectCerfa1Line" class="custom-select" disabled>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-info">Confirmer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Activate/Desactivate Modal -->
+<div class="modal fade" id="activateToggleModal" style="display: none;" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -279,16 +284,16 @@
                 @csrf
                 <div class="modal-body">
                     <p></p>
+                    <div class="selected-rows-list"></div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-info">Confirmer</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" style="display: none;" aria-hidden="true">
@@ -325,48 +330,49 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label for="editGroupCerfa1">Groupe</label>
-                            <input type="text" name="cerfa_group1" id="editGroupCerfa1" class="form-control">
+                            <label for="editCerfa1Group">Groupe</label>
+                            <select name="cerfa1_group" id="editCerfa1Group" class="custom-select">
+                                <option value="0">Sélectionner un groupe...</option>
+                                @foreach ($cerfa1Groups as $group)
+                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label for="editLineCerfa1">Ligne</label>
-                            <input type="text" name="cerfa_line1" id="editLineCerfa1" class="form-control">
+                            <label for="editCerfa1Line">Ligne</label>
+                            <select name="cerfa1_line_id" id="editCerfa1Line" class="custom-select">
+                            </select>
                         </div>
                     </div>
-
-                    <div class="form-group mb-2">
-                        Regroupement CERFA 2
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="editGroupCerfa2">Groupe</label>
-                            <input type="text" name="cerfa_group2" id="editGroupCerfa2" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="editLineCerfa2">Ligne</label>
-                            <input type="text" name="cerfa_line2" id="editLineCerfa2" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-2">
-                        Regroupement CERFA 3
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="editGroupCerfa3">Groupe</label>
-                            <input type="text" name="cerfa_group3" id="editGroupCerfa3" class="form-control">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="editLineCerfa3">Ligne</label>
-                            <input type="text" name="cerfa_line3" id="editLineCerfa3" class="form-control">
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-info" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-info">Sauvegarder</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn bg-teal">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h6 class="modal-title">Supprimer le compte général</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="deleteForm">
+                @csrf
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-outline-light">Confirmer</button>
                 </div>
             </form>
         </div>
@@ -408,44 +414,20 @@
             // Hide default search row
             $('#general-accounts_wrapper .row:first-child').hide();
 
-            // Activate Toggle Modal script (action on rows selection only)
-            $('#activateToggleModal').on('show.bs.modal', function (event) {
-                var modal = $(this)
-                var input = ''
-                $('.checkAccount:checkbox:checked').each(function(i) {
-                    rowId = $(this).val()
-                    input = "<input type='hidden' class='selectedRow' name='row"+[i]+"' value='"+ rowId +"'>"
-                    modal.find('.modal-body').append(input)
-                })
-                var button = $(event.relatedTarget);
-                var action = button.data('action');
-                var state = button.data('state')
-
-                modal.find('.modal-body p').text("Êtes-vous sûr de modifier " + modal.find('.modal-body .selectedRow').length + " comptes en '" + state + "' ?")
-
-                $('#activateToggleForm').on('submit', function(e) {
-                    e.preventDefault()
-                    $.ajax({
-                        type: "POST",
-                        url: "/comptabilite-generale/" + action,
-                        data: $('#activateToggleForm').serialize(),
-                        success: function (response) {
-                            console.log(response)
-                            modal.modal('hide')
-                            location.reload()
-                        },
-                        error: function (error) {
-                            console.log(error)
-                            alert('Une erreur est survenue :( ')
-                        }
-                    })
-                })
-            })
-
             // Rows "select all"
             $('#checkAll').change(function() {
                 $('.checkAccount').prop('checked', $(this).prop('checked'))
             });
+
+            // selection while click on the line
+            // $('table > tbody > tr > td.selection-cell').click(function(event) {
+            //     event.stopPropagation();
+            //     var $this = $(this);
+            //     var trId = $this.closest('tr').data('id');
+            //     var inputElt = $('tr[data-id='+trId+'] > td.checkbox-cell > input:checkbox')
+            //     console.log('Ligne correspondant au compte : ' + trId)
+            //     inputElt.prop("checked", !inputElt.prop("checked"))
+            // })
 
             // Enabled or disabled actions button for selection
             $('.checkAccount, #checkAll').change(function() {
@@ -495,28 +477,173 @@
             });
         })
 
-        // Edit Modal script
-        $('#editModal').on('show.bs.modal', function (event) {
+        // Add Modal script
+        $('#addModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
-            var datas = button.data('object') // Extract info from data-id attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
-            if(datas.active === 1) {
-                modal.find('.modal-body #editActive').prop('checked', true)
-                modal.find('.modal-body #editActive').val(1)
-            } else {
-                modal.find('.modal-body #editActive').prop('checked', false)
-                modal.find('.modal-body #editActive').val(0)
-            }
-            modal.find('.modal-body #editId').val(datas.id)
-            modal.find('.modal-body #editName').val(datas.name)
-            modal.find('.modal-body #editLineCerfa1').val(datas.cerfa_line1)
-            modal.find('.modal-body #editGroupCerfa1').val(datas.cerfa_group1)
-            modal.find('.modal-body #editLineCerfa2').val(datas.cerfa_line2)
-            modal.find('.modal-body #editGroupCerfa2').val(datas.cerfa_group2)
-            modal.find('.modal-body #editLineCerfa3').val(datas.cerfa_line3)
-            modal.find('.modal-body #editGroupCerfa3').val(datas.cerfa_group3)
+
+            modal.find('.modal-body #addActive').prop('checked', true)
+
+            modal.find('.modal-body #addActive').change(function() {
+                if (this.checked) {
+                    modal.find('.modal-body #addActive').val(1)
+                } else {
+                    modal.find('.modal-body #addActive').val(0)
+                }
+            })
+
+            // Get Sectors options while changing group
+            $('#addCerfa1Group').on('change', function() {
+                let group_id = $(this).val()
+                let add_line_options = ''
+
+                if (group_id == 0) {
+                    $('#addCerfa1Line').prop("disabled", true)
+                } else {
+                    $('#addCerfa1Line').prop("disabled", false)
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getCerfa1Lines',
+                    data: {'id': group_id},
+                    success: function(lines) {
+                        add_line_options += '<option value="0" selected>Sélectionner une ligne...</option>'
+                        lines.forEach(line => {
+                            add_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
+                        });
+
+                        $('#addCerfa1Line').find('option').remove().end().append(add_line_options)
+                    },
+                    error:function(){}
+                })
+            })
+
+            $('#addForm').on('submit', function(e) {
+                e.preventDefault()
+                $.ajax({
+                    type: "POST",
+                    url: "/comptabilite-generale",
+                    data: $('#addForm').serialize(),
+                    success: function (response) {
+                        console.log(response)
+                        modal.modal('hide')
+                        location.reload()
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        alert('Une erreur est survenue à la création du compte ! :( ')
+                    }
+                })
+            })
+        })
+
+        // Affect Modal script
+        $('#affectModal').on('show.bs.modal', function(event) {
+            var modal = $(this)
+            var input = ''
+            $('.checkAccount:checkbox:checked').each(function(i) {
+                rowId = $(this).val()
+                input = "<input type='hidden' class='selectedRow' name='row"+[i]+"' value='"+ rowId +"'>"
+                modal.find('.modal-body .selected-rows-list').append(input)
+            })
+
+            modal.find('.modal-body p').text("Veuillez affecter les " + modal.find('.modal-body .selectedRow').length + " comptes sélectionnés :")
+
+            // Get lines options while changing group
+            $('#affectCerfa1Group').on('change', function() {
+                let group_id = $(this).val()
+                let affect_cerfa1Line_options = ''
+
+                if (group_id == 0) {
+                    $('#affectCerfa1Line').prop("disabled", true)
+                } else {
+                    $('#affectCerfa1Line').prop("disabled", false)
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getCerfa1Lines',
+                    data: {'id': group_id},
+                    success: function(lines) {
+                        affect_cerfa1Line_options += '<option value="0" selected>Sélectionner un secteur...</option>'
+                        lines.forEach(line => {
+                            affect_cerfa1Line_options += '<option value="' + line.id + '">' + line.name + '</option>'
+                        });
+
+                        $('#affectCerfa1Line').find('option').remove().end().append(affect_cerfa1Line_options)
+                    },
+                    error:function(){}
+                })
+            })
+
+            $('#affectForm').on('submit', function(e) {
+                e.preventDefault()
+                $.ajax({
+                    type: "POST",
+                    url: "/comptabilite-generale/affect",
+                    data: $('#affectForm').serialize(),
+                    success: function (response) {
+                        modal.modal('hide')
+                        location.reload()
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        alert('Une erreur est survenue :( ')
+                    }
+                })
+            })
+        })
+        $('#affectModal').on('hide.bs.modal', function () {
+            var modal = $(this)
+            modal.find('.modal-body .selected-rows-list').empty()
+        })
+
+        // Activate Toggle Modal script (action on rows selection only)
+        $('#activateToggleModal').on('show.bs.modal', function (event) {
+            var modal = $(this)
+            var input = ''
+            $('.checkAccount:checkbox:checked').each(function(i) {
+                rowId = $(this).val()
+                input = "<input type='hidden' class='selectedRow' name='row"+[i]+"' value='"+ rowId +"'>"
+                modal.find('.selected-rows-list').append(input)
+            })
+            var button = $(event.relatedTarget);
+            var action = button.data('action');
+            var state = button.data('state')
+
+            modal.find('.modal-body p').text("Êtes-vous sûr de modifier " + modal.find('.modal-body .selectedRow').length + " comptes en '" + state + "' ?")
+
+            $('#activateToggleForm').on('submit', function(e) {
+                e.preventDefault()
+                $.ajax({
+                    type: "POST",
+                    url: "/comptabilite-generale/" + action,
+                    data: $('#activateToggleForm').serialize(),
+                    success: function (response) {
+                        console.log(response)
+                        modal.modal('hide')
+                        location.reload()
+                    },
+                    error: function (error) {
+                        console.log(error)
+                        alert('Une erreur est survenue :( ')
+                    }
+                })
+            })
+        })
+        $('#activateToggleModal').on('hide.bs.modal', function () {
+            var modal = $(this)
+            modal.find('.modal-body .selected-rows-list').empty()
+        })
+
+        // Edit Modal script
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var datas = button.data('object')
+            var modal = $(this)
 
             modal.find('.modal-body #editActive').change(function() {
                 if (this.checked) {
@@ -524,6 +651,63 @@
                 } else {
                     modal.find('.modal-body #editActive').val(0)
                 }
+            })
+
+            // Fill form with datas of the row
+            if(datas.active === 1) {
+                modal.find('.modal-body #editActive').prop('checked', true)
+                modal.find('.modal-body #editActive').val(1)
+            } else {
+                modal.find('.modal-body #editActive').prop('checked', false)
+                modal.find('.modal-body #editActive').val(0)
+            }
+
+            modal.find('.modal-body #editId').val(datas.id)
+            modal.find('.modal-body #editName').val(datas.name)
+            modal.find('.modal-body #editCerfa1Group').val(datas.cerfa1_line.cerfa1_group.id).prop("selected", true)
+
+            // Get current line option
+            let edit_line_options = ''
+            $.ajax({
+                type: 'GET',
+                url: '/getCerfa1Lines',
+                data: {'id': datas.cerfa1_line.cerfa1_group.id},
+                success: function(lines) {
+                    lines.forEach(line => {
+                        edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
+                    });
+
+                    $('#editCerfa1Line').find('option').remove().end().append(edit_line_options)
+                    $('#editCerfa1Line').val(datas.cerfa1_line.id).prop("selected", true)
+                },
+                error:function(){}
+            })
+
+            // Get Lines options while changing group
+            $('#editCerfa1Group').on('change', function() {
+                let group_id = $(this).val()
+                let edit_line_options = ''
+
+                if (group_id == 0) {
+                    $('#editCerfa1Line').prop("disabled", true)
+                } else {
+                    $('#editCerfa1Line').prop("disabled", false)
+                }
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/getCerfa1Lines',
+                    data: {'id': group_id},
+                    success: function(lines) {
+                        edit_line_options += '<option value="0" selected>Sélectionner une ligne...</option>'
+                        lines.forEach(line => {
+                            edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
+                        });
+
+                        $('#editCerfa1Line').find('option').remove().end().append(edit_line_options)
+                    },
+                    error:function(){}
+                })
             })
 
             $('#editForm').on('submit', function(e) {
@@ -544,38 +728,31 @@
                 })
             })
         })
+        $('#editModal').on('hide.bs.modal', function () {
+            var modal = $(this)
+            modal.find('.custom-select').prop("disabled", false)
+        })
 
-        // Add Modal script
-        $('#addModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        // Delete Modal script
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
             var modal = $(this)
 
-            modal.find('.modal-body #addActive').prop('checked', true)
+            modal.find('.modal-body p').text("Voulez-vous supprimer le compte n° " + id + " de votre plan de compte ?")
 
-            modal.find('.modal-body #addActive').change(function() {
-                if (this.checked) {
-                    modal.find('.modal-body #addActive').val(1)
-                } else {
-                    modal.find('.modal-body #addActive').val(0)
-                }
-            })
-
-            $('#addForm').on('submit', function(e) {
+            $('#deleteForm').on('submit', function(e) {
                 e.preventDefault()
                 $.ajax({
-                    type: "POST",
-                    url: "/comptabilite-generale",
-                    data: $('#addForm').serialize(),
+                    type: "DELETE",
+                    url: "/comptabilite-generale/destroy/" + id,
+                    data: $('#deleteForm').serialize(),
                     success: function (response) {
-                        console.log(response)
                         modal.modal('hide')
                         location.reload()
                     },
                     error: function (error) {
-                        console.log(error)
-                        alert('Une erreur est survenue à la création du compte ! :( ')
+                        alert('Une erreur est survenue :( ')
                     }
                 })
             })

@@ -15,11 +15,11 @@ class Cerfa1Line extends Model
     //RELATIONS
     public function cerfa1Group()
     {
-        return $this->belongsTo(('App\Cerfa1Group'));
+        return $this->belongsTo('App\Cerfa1Group');
     }
 
-    public function generalAccounts()
+    public function general_accounts()
     {
-        return $this->hasMany(('App\GeneralAccount'));
+        return $this->hasMany('App\GeneralAccount');
     }
 }

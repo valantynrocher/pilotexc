@@ -17,3 +17,8 @@
 .select-action {
     pointer-events: none;
 }
+
+.actions-cell {
+    display: flex;
+    flex-direction: row;
+}
