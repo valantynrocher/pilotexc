@@ -10,26 +10,23 @@ class GeneralAccount extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'id';
-
     public $timestamps = false;
 
-    public $fillable = ['id', 'account_subclass_id', 'name',
-    'cerfa1_line_id', 'active', 'client_id'];
+    public $fillable = ['id', 'account_subclass_id', 'name', 'cerfa1_line_id', 'active', 'client_id'];
 
     // RELATIONS
-    public function analyticEntries()
+    public function account_subclass()
     {
-        return $this->hasMany('App\AnalyticEntry');
-    }
-
-    public function accountSubclass()
-    {
-        return $this->belongsTo('App\AccountSubclass');
+        return $this->belongsTo('App\AccountSubclass', 'account_subclass_id');
     }
 
     public function cerfa1Line()
     {
         return $this->belongsTo('App\Cerfa1Line');
+    }
+
+    public function analytic_entries()
+    {
+        return $this->hasMany('App\AnalyticEntry');
     }
 }

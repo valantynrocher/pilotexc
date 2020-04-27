@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class AnalyticAccountsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of analytic accounts.
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,6 +28,9 @@ class AnalyticAccountsController extends Controller
         ]);
     }
 
+    /**
+     * Ajax request to get options for sector select element
+     */
     public function getSectors(Request $request)
     {
         $sectors = Sector::where('folder_id', $request->id)->get();
@@ -35,6 +38,9 @@ class AnalyticAccountsController extends Controller
         return response()->json($sectors);
     }
 
+    /**
+     * Ajax request to get options for service select element
+     */
     public function getServices(Request $request)
     {
         $services = Service::where('sector_id', $request->id)->get();
@@ -42,9 +48,8 @@ class AnalyticAccountsController extends Controller
         return response()->json($services);
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created analytic account in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -62,9 +67,8 @@ class AnalyticAccountsController extends Controller
         $analyticAccount->save();
     }
 
-
     /**
-     * Update the specified resource in storage.
+     * Update the specified analytic account in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -83,7 +87,7 @@ class AnalyticAccountsController extends Controller
     }
 
     /**
-     * Update the selected resources to active. Call with ajax
+     * Update the selected analytic accounts and set to active. Call with ajax
      */
     public function activate(Request $request)
     {
@@ -96,7 +100,7 @@ class AnalyticAccountsController extends Controller
     }
 
     /**
-     * Update the selected resources to active. Call with ajax
+     * Update the selected analytic accounts and set to inactive. Call with ajax
      */
     public function desactivate(Request $request)
     {
@@ -106,5 +110,29 @@ class AnalyticAccountsController extends Controller
             $analyticAccount->active = 0;
             $analyticAccount->save();
         }
+    }
+
+    /**
+     * Update the selected analytic accounts and set service and structure. Call with ajax
+     */
+    public function affect(Request $request)
+    {
+        print_r($request);
+        $inputs = $request->except(['_token']);
+        foreach($inputs as $k => $v) {
+            $analyticAccount = AnalyticAccount::find($v);
+            $analyticAccount->service_id = $request->input('service_id');
+            $analyticAccount->structure_id = $request->input('structure_id');
+            $analyticAccount->save();
+        }
+    }
+
+    /**
+     * Delete the selected analytic account
+     */
+    public function destroy($id)
+    {
+        $account = AnalyticAccount::find($id);
+        $account->delete();
     }
 }

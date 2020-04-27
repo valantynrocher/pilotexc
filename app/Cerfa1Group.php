@@ -13,7 +13,7 @@ class Cerfa1Group extends Model
     public $fillable = ['name', 'direct_indirect', 'charges_produits'];
 
     //RELATIONS
-    public function cerfa1Lines()
+    public function cerfa1_lines()
     {
         return $this->hasMany(('App\Cerfa1Line'));
     }
