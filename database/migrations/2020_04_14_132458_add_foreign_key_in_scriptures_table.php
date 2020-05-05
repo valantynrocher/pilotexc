@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeyInAnalyticEntriesTable extends Migration
+class AddForeignKeyInScripturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddForeignKeyInAnalyticEntriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('analytic_entries', function (Blueprint $table) {
+        Schema::table('scriptures', function (Blueprint $table) {
             $table->foreign('analytic_account_id')->references('id')->on('analytic_accounts');
             $table->foreign('general_account_id')->references('id')->on('general_accounts');
         });
@@ -26,9 +26,9 @@ class AddForeignKeyInAnalyticEntriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('analytic_entries', function (Blueprint $table) {
-            $table->dropForeign('analytic_entries_analytic_account_id_foreign');
-            $table->dropForeign('analytic_entries_general_account_id_foreign');
+        Schema::table('scriptures', function (Blueprint $table) {
+            $table->dropForeign('scriptures_analytic_account_id_foreign');
+            $table->dropForeign('scriptures_general_account_id_foreign');
         });
 
     }

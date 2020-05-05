@@ -15,6 +15,6 @@ class Folder extends Model
     // RELATIONS
     public function sectors()
     {
-        return $this->hasMany('App\Sector');
+        return $this->hasMany(Sector::class);
     }
 }

@@ -65,7 +65,6 @@ class GeneralAccountsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $generalAccount = GeneralAccount::find($id);
 
         $generalAccount->name = $request->input('name');

@@ -48,6 +48,8 @@ Route::get('getCerfa1Lines', 'GeneralAccountsController@getCerfa1Lines')->name('
 
 
 Route::get('paramètres', 'ParametersController@index')->name('parameters.index');
+Route::post('storeFiscalYear', 'ParametersController@storeFiscalYear')->name('parameters.storeFiscalYear');
 
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
+Route::post('import', 'ScripturesController@import')->name('scriptures.import');
 

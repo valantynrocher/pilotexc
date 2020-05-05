@@ -15,6 +15,18 @@ class Structure extends Model
     //RELATIONS
     public function analyticAccounts()
     {
-        return $this->hasMany('App\AnalyticAccount');
+        return $this->hasMany(AnalyticAccount::class);
+    }
+
+    public function scriptures()
+    {
+        return $this->hasManyThrough(
+            Scripture::class,
+            AnalyticAccount::class,
+            'structure_id',
+            'analytic_account_id',
+            'id',
+            'id'
+        );
     }
 }

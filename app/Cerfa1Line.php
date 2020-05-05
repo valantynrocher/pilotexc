@@ -20,6 +20,6 @@ class Cerfa1Line extends Model
 
     public function general_accounts()
     {
-        return $this->hasMany('App\GeneralAccount');
+        return $this->hasMany(GeneralAccount::class);
     }
 }

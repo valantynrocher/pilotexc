@@ -1,10 +1,10 @@
 <?php
 
-use App\Imports\AnalyticEntriesImport;
+use App\Imports\ScripturesImport;
 use Illuminate\Database\Seeder;
 use Maatwebsite\Excel\Facades\Excel;
 
-class AnalyticEntriesSeeder extends Seeder
+class ScripturesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +13,6 @@ class AnalyticEntriesSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new AnalyticEntriesImport, 'public/excel_bases/analytics_entries_import.xlsx');
+        Excel::import(new ScripturesImport, 'public/excel_bases/scriptures_import.csv');
     }
 }

@@ -15,6 +15,6 @@ class Cerfa1Group extends Model
     //RELATIONS
     public function cerfa1_lines()
     {
-        return $this->hasMany(('App\Cerfa1Line'));
+        return $this->hasMany(Cerfa1Line::class);
     }
 }

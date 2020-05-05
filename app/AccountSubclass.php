@@ -24,6 +24,6 @@ class AccountSubclass extends Model
 
     public function accountClass()
     {
-        return $this->belongsTo('App\AccountClass');
+        return $this->belongsTo(AccountClass::class);
     }
 }

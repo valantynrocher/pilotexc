@@ -83,18 +83,6 @@
             </h4>
         </div>
 
-        {{-- <!-- Uploading form -->
-            <form>
-                @csrf
-                <div class="form-group">
-                    <label>Sélectionnez un fichier à importer</label>
-                    <small>(Taille maximum : 5 Mo, Formats acceptés : *.xlsx, *.xls, *.csv)</small>
-                </div>
-                <div class="form-group">
-                    <input type="file" class="mr-5" name="select_file">
-                    <input type="submit" value="Importer" class="btn btn-danger">
-                </div>
-            </form> --}}
         <div id="accountsTable" class="panel-collapse in collapse show" style="">
             <div class="card-body">
                 <!-- General accounts table -->
