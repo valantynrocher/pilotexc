@@ -15,11 +15,11 @@ class Service extends Model
     // RELATIONS
     public function analyticAccounts()
     {
-        return $this->hasMany('App\AnalyticAccount');
+        return $this->hasMany(AnalyticAccount::class);
     }
 
     public function sector()
     {
-        return $this->belongsTo('App\Sector');
+        return $this->belongsTo(Sector::class);
     }
 }

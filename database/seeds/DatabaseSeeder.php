@@ -11,16 +11,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(AccountClassSeeder::class);
-        // $this->call(AccountSubClassSeeder::class);
-        // $this->call(Cerfa1GroupSeeder::class);
-        // $this->call(Cerfa1LineSeeder::class);
-        // $this->call(GeneralAccountSeeder::class);
-        // $this->call(StructureSeeder::class);
-        // $this->call(FolderSeeder::class);
-        // $this->call(SectorSeeder::class);
-        // $this->call(ServiceSeeder::class);
-        // $this->call(AnalyticAccountSeeder::class);
-        // $this->call(AnalyticEntriesSeeder::class);
+        $this->call(AccountClassSeeder::class);
+        $this->call(AccountSubClassSeeder::class);
+        $this->call(Cerfa1GroupSeeder::class);
+        $this->call(Cerfa1LineSeeder::class);
+        $this->call(GeneralAccountSeeder::class);
+        $this->call(StructureSeeder::class);
+        $this->call(FolderSeeder::class);
+        $this->call(SectorSeeder::class);
+        $this->call(ServiceSeeder::class);
+        $this->call(AnalyticAccountSeeder::class);
     }
 }

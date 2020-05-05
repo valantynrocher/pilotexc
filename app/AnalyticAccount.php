@@ -15,18 +15,18 @@ class AnalyticAccount extends Model
     public $fillable = ['id','name', 'active', 'service_id', 'structure_id', 'in_charge_id', 'client_id'];
 
     // RELATIONS
-    public function analytic_entries()
+    public function scriptures()
     {
-        return $this->hasMany('App\AnalyticEntry');
+        return $this->hasMany(Scripture::class);
     }
 
     public function service()
     {
-        return $this->belongsTo('App\Service');
+        return $this->belongsTo(Service::class);
     }
 
     public function structure()
     {
-        return $this->belongsTo('App\Structure');
+        return $this->belongsTo(Structure::class);
     }
 }

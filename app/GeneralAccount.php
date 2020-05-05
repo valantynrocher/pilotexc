@@ -17,16 +17,16 @@ class GeneralAccount extends Model
     // RELATIONS
     public function account_subclass()
     {
-        return $this->belongsTo('App\AccountSubclass', 'account_subclass_id');
+        return $this->belongsTo(AccountSubclass::class, 'account_subclass_id');
     }
 
     public function cerfa1Line()
     {
-        return $this->belongsTo('App\Cerfa1Line');
+        return $this->belongsTo(Cerfa1Line::class);
     }
 
-    public function analytic_entries()
+    public function scriptures()
     {
-        return $this->hasMany('App\AnalyticEntry');
+        return $this->hasMany(Scripture::class);
     }
 }

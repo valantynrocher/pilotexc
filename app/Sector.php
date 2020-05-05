@@ -15,11 +15,11 @@ class Sector extends Model
     // RELATIONS
     public function services()
     {
-        return $this->hasMany('App\Service');
+        return $this->hasMany(Service::class);
     }
 
     public function folder()
     {
-        return $this->belongsTo('App\Folder');
+        return $this->belongsTo(Folder::class);
     }
 }

@@ -19,6 +19,6 @@ class AccountClass extends Model
     // RELATIONS
     public function accountSubclasses()
     {
-        return $this->hasMany('App\AccountSubclass');
+        return $this->hasMany(AccountSubclass::class);
     }
 }

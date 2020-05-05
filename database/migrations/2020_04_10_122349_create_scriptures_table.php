@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnalyticEntriesTable extends Migration
+class CreateScripturesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAnalyticEntriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('analytic_entries', function (Blueprint $table) {
+        Schema::create('scriptures', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('analytic_account_id')->unsigned();
             $table->bigInteger('general_account_id')->unsigned();
