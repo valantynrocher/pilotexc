@@ -22,4 +22,16 @@ class Service extends Model
     {
         return $this->belongsTo(Sector::class);
     }
+
+    public function scriptures()
+    {
+        return $this->hasManyThrough(
+            Scripture::class,
+            AnalyticAccount::class,
+            'service_id',
+            'analytic_account_id',
+            'id',
+            'id'
+        );
+    }
 }

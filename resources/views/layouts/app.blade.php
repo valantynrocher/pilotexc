@@ -34,7 +34,7 @@
         <!-- Custom style -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-        @yield('styles')
+        @yield('head')
     </head>
 
     <body class="hold-transition sidebar-mini layout-fixed">
@@ -118,12 +118,12 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('users.index') }}" class="nav-link">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>Utilisateurs</p>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -160,19 +160,19 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-share-alt"></i>
                                     <p>Automation</p>
                                 </a>
-                            </li>
+                            </li> --}}
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-file-export"></i>
                                     <p>Export</p>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->
