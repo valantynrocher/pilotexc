@@ -84,28 +84,34 @@ class ScripturesController extends Controller
     public function import(Request $request)
     {
         if($request->hasFile('scriptures')) {
-            // set Start and End Date for selected exercise
-            $fiscalYear = FiscalYear::find($request->input('fiscal_year_id'));
-            $startExercise = $fiscalYear->year_start . '-' . $fiscalYear->month_start . '-01';
-            $endExercise = $fiscalYear->year_end . '-' . $fiscalYear->month_end . '-31';
+            try {
+                // set Start and End Date for selected exercise
+                $fiscalYear = FiscalYear::find($request->input('fiscal_year_id'));
+                $startExercise = $fiscalYear->year_start . '-' . $fiscalYear->month_start . '-01';
+                $endExercise = $fiscalYear->year_end . '-' . $fiscalYear->month_end . '-31';
 
-            // first of all, check if scriptures already exist for this exercise
-            $check = Scripture::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
+                // first of all, check if scriptures already exist for this exercise
+                $check = Scripture::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
 
-            // get, rename and store importation file
-            $path = $this->storeImportedFile($request);
+                // get, rename and store importation file
+                $path = $this->storeImportedFile($request);
 
-            // launch Excel import in temporary table
-            Excel::import(new ScripturesImport, $path);
+                // launch Excel import in temporary table
+                Excel::import(new ScripturesImport, $path);
 
-            // filtered scriptures to get only the selected exercise
-            $filtered = ImportScriptures::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
+                // filtered scriptures to get only the selected exercise
+                $filtered = ImportScriptures::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
 
-            // save each filtered scriptures in the final 'scriptures' table
-            $this->saveFinalScriptures($filtered, $fiscalYear);
+                // save each filtered scriptures in the final 'scriptures' table
+                $this->saveFinalScriptures($filtered, $fiscalYear);
 
-            // truncate temporary 'import_scriptures' table
-            DB::table('import_scriptures')->truncate();
+                // truncate temporary 'import_scriptures' table
+                DB::table('import_scriptures')->truncate();
+
+                return redirect()->route('scriptures.index')->with('success', 'Votre import \'est bien passé.');
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
     }
 

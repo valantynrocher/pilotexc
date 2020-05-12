@@ -8,6 +8,13 @@
 @section('content')
 <!-- Main content -->
 <section class="content">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i> Succès !</h5>
+            {{ session('success') }}
+        </div>
+    @endif
     <!-- Advanced features card -->
     <div class="card">
         <div class="card-header bg-indigo">

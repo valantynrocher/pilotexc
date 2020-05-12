@@ -22,8 +22,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard.index');
-Route::get('render-data/{id}', 'DashboardController@renderChart')->name('dashboard.renderChart');
-Route::get('chart-data/{id}', 'DashboardController@chartApi')->name('dashboard.chartApi');
+Route::get('rapport/evolution-analytique-secteur/{id}', 'DashboardController@analyticalEvolutionChart')->name('dashboard.analyticalEvolutionChart');
+Route::get('rapport/repartition-produits-annee/{id}', 'DashboardController@productsDivisionChart')->name('dashboard.productsDivisionChart');
+Route::get('rapport/repartition-charges-personnel/{id}', 'DashboardController@salaryChargesChart')->name('dashboard.salaryChargesChart');
 
 Route::get('utilisateurs', 'UsersController@index')->name('users.index');
 
@@ -53,5 +54,5 @@ Route::get('paramètres', 'ParametersController@index')->name('parameters.index'
 Route::post('storeFiscalYear', 'ParametersController@storeFiscalYear')->name('parameters.storeFiscalYear');
 
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
-Route::get('import', 'ScripturesController@import')->name('scriptures.import');
+Route::post('import', 'ScripturesController@import')->name('scriptures.import');
 

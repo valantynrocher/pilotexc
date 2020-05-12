@@ -11753,7 +11753,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 }
 
 [class*='sidebar-dark'] .brand-link {
-  border-bottom: 1px solid #4b545c;
+  border-bottom: 1px solid #6bc1d2;
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -12069,7 +12069,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 }
 
 [class*='sidebar-dark-'] {
-  background-color: #343a40;
+  background-color: #00a1b6;
 }
 
 [class*='sidebar-dark-'] .user-panel a:hover {
@@ -12121,7 +12121,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 }
 
 [class*='sidebar-dark-'] .sidebar a {
-  color: #C2C7D0;
+  color: #e8e8e8;
 }
 
 [class*='sidebar-dark-'] .sidebar a:hover, [class*='sidebar-dark-'] .sidebar a:focus {
@@ -12129,7 +12129,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 }
 
 [class*='sidebar-dark-'] .nav-treeview > .nav-item > .nav-link {
-  color: #C2C7D0;
+  color: #e8e8e8;
 }
 
 [class*='sidebar-dark-'] .nav-treeview > .nav-item > .nav-link:hover, [class*='sidebar-dark-'] .nav-treeview > .nav-item > .nav-link:focus {
