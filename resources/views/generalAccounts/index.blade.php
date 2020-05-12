@@ -649,7 +649,9 @@
 
             modal.find('.modal-body #editId').val(datas.id)
             modal.find('.modal-body #editName').val(datas.name)
-            modal.find('.modal-body #editCerfa1Group').val(datas.cerfa1_line.cerfa1_group.id).prop("selected", true)
+            if (datas.cerfa1_line.cerfa1_group !== null) {
+                modal.find('.modal-body #editCerfa1Group').val(datas.cerfa1_line.cerfa1_group.id).prop("selected", true)
+            }
 
             // Get current line option
             let edit_line_options = ''
