@@ -15,9 +15,14 @@ class GeneralAccount extends Model
     public $fillable = ['id', 'account_subclass_id', 'name', 'cerfa1_line_id', 'active', 'client_id'];
 
     // RELATIONS
-    public function account_subclass()
+    public function accountSubclass()
     {
         return $this->belongsTo(AccountSubclass::class, 'account_subclass_id');
+    }
+
+    public function accountClass()
+    {
+        return $this->hasOneThrough(AccountClass::class, AccountSubclass::class);
     }
 
     public function cerfa1Line()
