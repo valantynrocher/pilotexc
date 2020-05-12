@@ -404,16 +404,6 @@
                 $('.checkAccount').prop('checked', $(this).prop('checked'))
             });
 
-            // selection while click on the line
-            // $('table > tbody > tr > td.selection-cell').click(function(event) {
-            //     event.stopPropagation();
-            //     var $this = $(this);
-            //     var trId = $this.closest('tr').data('id');
-            //     var inputElt = $('tr[data-id='+trId+'] > td.checkbox-cell > input:checkbox')
-            //     console.log('Ligne correspondant au compte : ' + trId)
-            //     inputElt.prop("checked", !inputElt.prop("checked"))
-            // })
-
             // Enabled or disabled actions button for selection
             $('.checkAccount, #checkAll').change(function() {
                 if ($('input:checkbox:checked').length > 0) {
@@ -649,53 +639,58 @@
 
             modal.find('.modal-body #editId').val(datas.id)
             modal.find('.modal-body #editName').val(datas.name)
-            if (datas.cerfa1_line.cerfa1_group !== null) {
+
+            if (datas.cerfa1_line !== null) {
                 modal.find('.modal-body #editCerfa1Group').val(datas.cerfa1_line.cerfa1_group.id).prop("selected", true)
-            }
-
-            // Get current line option
-            let edit_line_options = ''
-            $.ajax({
-                type: 'GET',
-                url: '/getCerfa1Lines',
-                data: {'id': datas.cerfa1_line.cerfa1_group.id},
-                success: function(lines) {
-                    lines.forEach(line => {
-                        edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
-                    });
-
-                    $('#editCerfa1Line').find('option').remove().end().append(edit_line_options)
-                    $('#editCerfa1Line').val(datas.cerfa1_line.id).prop("selected", true)
-                },
-                error:function(){}
-            })
-
-            // Get Lines options while changing group
-            $('#editCerfa1Group').on('change', function() {
-                let group_id = $(this).val()
+                // Get current line option
                 let edit_line_options = ''
-
-                if (group_id == 0) {
-                    $('#editCerfa1Line').prop("disabled", true)
-                } else {
-                    $('#editCerfa1Line').prop("disabled", false)
-                }
-
                 $.ajax({
                     type: 'GET',
                     url: '/getCerfa1Lines',
-                    data: {'id': group_id},
+                    data: {'id': datas.cerfa1_line.cerfa1_group.id},
                     success: function(lines) {
-                        edit_line_options += '<option value="0" selected>Sélectionner une ligne...</option>'
                         lines.forEach(line => {
                             edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
                         });
 
                         $('#editCerfa1Line').find('option').remove().end().append(edit_line_options)
+                        $('#editCerfa1Line').val(datas.cerfa1_line.id).prop("selected", true)
                     },
                     error:function(){}
                 })
-            })
+
+                // Get Lines options while changing group
+                $('#editCerfa1Group').on('change', function() {
+                    let group_id = $(this).val()
+                    let edit_line_options = ''
+
+                    if (group_id == 0) {
+                        $('#editCerfa1Line').prop("disabled", true)
+                    } else {
+                        $('#editCerfa1Line').prop("disabled", false)
+                    }
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/getCerfa1Lines',
+                        data: {'id': group_id},
+                        success: function(lines) {
+                            edit_line_options += '<option value="0" selected>Sélectionner une ligne...</option>'
+                            lines.forEach(line => {
+                                edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>'
+                            });
+
+                            $('#editCerfa1Line').find('option').remove().end().append(edit_line_options)
+                        },
+                        error:function(){}
+                    })
+                })
+            } else {
+                modal.find('.modal-body #editCerfa1Group').val(0)
+                modal.find('#editCerfa1Line').find('option').remove().end().prop("disabled", true)
+            }
+
+
 
             $('#editForm').on('submit', function(e) {
                 e.preventDefault()
