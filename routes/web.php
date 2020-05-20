@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -55,4 +56,3 @@ Route::post('storeFiscalYear', 'ParametersController@storeFiscalYear')->name('pa
 
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
 Route::post('import', 'ScripturesController@import')->name('scriptures.import');
-
