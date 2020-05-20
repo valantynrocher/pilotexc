@@ -368,11 +368,11 @@
 @section('script')
     <!-- DataTables -->
     <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
-    <script src="../../plugins/toastr/toastr.min.js"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+    <script src="{{ asset('plugins/toastr/toastr.min.js')}}"></script>
 
     <script>
         $(document).ready(function () {

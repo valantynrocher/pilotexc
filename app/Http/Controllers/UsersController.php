@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FiscalYear;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -25,5 +26,20 @@ class UsersController extends Controller
     public function index()
     {
         return view('users.index');
+    }
+
+    public function vueJs()
+    {
+        return view('users.vuejs');
+    }
+
+    /**
+     * @return \Illuminate\Http|Response
+     */
+    public function axios()
+    {
+        $fiscalYears = FiscalYear::all();
+
+        return response()->json($fiscalYears);
     }
 }

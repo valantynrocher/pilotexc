@@ -1,0 +1,11 @@
+/* Custom style Pilotexc ADMIN
+
+*/
+
+.navbar-logo {
+    max-height: 40px;
+}
+
+.select-action {
+    pointer-events: none;
+}
