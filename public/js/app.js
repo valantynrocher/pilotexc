@@ -37218,10 +37218,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/js/Treeview.js":
-/*!**********************************!*\
-  !*** ./resources/js/Treeview.js ***!
-  \**********************************/
+/***/ "./resources/js/adminlte/Treeview.js":
+/*!*******************************************!*\
+  !*** ./resources/js/adminlte/Treeview.js ***!
+  \*******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37427,10 +37427,10 @@ var Treeview = function ($) {
 
 /***/ }),
 
-/***/ "./resources/js/adminlte.js":
-/*!**********************************!*\
-  !*** ./resources/js/adminlte.js ***!
-  \**********************************/
+/***/ "./resources/js/adminlte/adminlte.js":
+/*!*******************************************!*\
+  !*** ./resources/js/adminlte/adminlte.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39344,9 +39344,38 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-__webpack_require__(/*! ./adminlte */ "./resources/js/adminlte.js");
+__webpack_require__(/*! ./adminlte/adminlte */ "./resources/js/adminlte/adminlte.js");
 
-__webpack_require__(/*! ./Treeview */ "./resources/js/Treeview.js");
+__webpack_require__(/*! ./adminlte/Treeview */ "./resources/js/adminlte/Treeview.js");
+
+$(document).ready(function () {
+  __webpack_require__(/*! ./modals/analytic/create */ "./resources/js/modals/analytic/create.js");
+
+  __webpack_require__(/*! ./modals/analytic/affect */ "./resources/js/modals/analytic/affect.js");
+
+  __webpack_require__(/*! ./modals/analytic/activate */ "./resources/js/modals/analytic/activate.js");
+
+  __webpack_require__(/*! ./modals/analytic/edit */ "./resources/js/modals/analytic/edit.js");
+
+  __webpack_require__(/*! ./modals/analytic/delete */ "./resources/js/modals/analytic/delete.js");
+
+  __webpack_require__(/*! ./modals/general/create */ "./resources/js/modals/general/create.js");
+
+  __webpack_require__(/*! ./modals/general/affect */ "./resources/js/modals/general/affect.js");
+
+  __webpack_require__(/*! ./modals/general/activate */ "./resources/js/modals/general/activate.js");
+
+  __webpack_require__(/*! ./modals/general/edit */ "./resources/js/modals/general/edit.js");
+
+  __webpack_require__(/*! ./modals/general/delete */ "./resources/js/modals/general/delete.js");
+
+  __webpack_require__(/*! ./modals/fiscalYears/create */ "./resources/js/modals/fiscalYears/create.js");
+});
+$(document).ready(function () {
+  __webpack_require__(/*! ./tables/analytics */ "./resources/js/tables/analytics.js");
+
+  __webpack_require__(/*! ./tables/generals */ "./resources/js/tables/generals.js");
+});
 
 /***/ }),
 
@@ -39392,6 +39421,1055 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/modals/analytic/activate.js":
+/*!**************************************************!*\
+  !*** ./resources/js/modals/analytic/activate.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var ActivateAnalyticAccount = function () {
+  $('#activateToggleModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    var input = '';
+    $('.checkAccount:checkbox:checked').each(function (i) {
+      rowId = $(this).val();
+      input = "<input type='hidden' class='selectedRow' name='row" + [i] + "' value='" + rowId + "'>";
+      modal.find('.modal-body .selected-rows-list').append(input);
+    });
+    var button = $(event.relatedTarget);
+    var action = button.data('action');
+    var state = button.data('state');
+    modal.find('.modal-body p').text("Êtes-vous sûr de modifier " + modal.find('.modal-body .selectedRow').length + " comptes en '" + state + "' ?");
+    $('#activateToggleForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-analytique/" + action,
+        data: $('#activateToggleForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+  $('#activateToggleModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.modal-body .selected-rows-list').empty();
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/analytic/affect.js":
+/*!************************************************!*\
+  !*** ./resources/js/modals/analytic/affect.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AffectAnalyticAccount = function () {
+  $('#affectModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    var input = '';
+    $('.checkAccount:checkbox:checked').each(function (i) {
+      rowId = $(this).val();
+      input = "<input type='hidden' class='selectedRow' name='row" + [i] + "' value='" + rowId + "'>";
+      modal.find('.modal-body .selected-rows-list').append(input);
+    });
+    modal.find('.modal-body p').text("Veuillez affecter les " + modal.find('.modal-body .selectedRow').length + " comptes sélectionnés :"); // Get Sectors options while changing folder
+
+    $('#affectFolder').on('change', function () {
+      var folder_id = $(this).val();
+      var affect_sector_options = '';
+
+      if (folder_id == 0) {
+        $('#affectSector').prop("disabled", true);
+        $('#affectService').prop("disabled", true);
+      } else {
+        $('#affectSector').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getSectors',
+        data: {
+          'id': folder_id
+        },
+        success: function success(sectors) {
+          affect_sector_options += '<option value="0" selected>Sélectionner un secteur...</option>';
+          sectors.forEach(function (sector) {
+            affect_sector_options += '<option value="' + sector.id + '">' + sector.name + '</option>';
+          });
+          $('#affectSector').find('option').remove().end().append(affect_sector_options);
+        },
+        error: function error() {}
+      });
+    }); // Get Services options while changing sector
+
+    $('#affectSector').on('change', function () {
+      var sector_id = $(this).val();
+      var folder_id = $('#affectFolder').val();
+      var affect_service_options = '';
+
+      if (sector_id == 0) {
+        $('#affectService').prop("disabled", true);
+      } else {
+        $('#affectService').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getServices',
+        data: {
+          'id': sector_id
+        },
+        success: function success(services) {
+          affect_service_options += '<option selected>Sélectionner un service...</option>';
+          services.forEach(function (service) {
+            affect_service_options += '<option value="' + service.id + '">' + service.name + '</option>';
+          });
+          $('#affectService').find('option').remove().end().append(affect_service_options);
+        },
+        error: function error() {}
+      });
+    });
+    $('#affectForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-analytique/affect",
+        data: $('#affectForm').serialize(),
+        success: function success(response) {
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+  $('#affectModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.modal-body .selected-rows-list').empty();
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/analytic/create.js":
+/*!************************************************!*\
+  !*** ./resources/js/modals/analytic/create.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AddAnalyticAccount = function () {
+  $('#addModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var modal = $(this); // Active toggle checkbox
+
+    modal.find('.modal-body #addActive').prop('checked', true);
+    modal.find('.modal-body #addActive').change(function () {
+      if (this.checked) {
+        modal.find('.modal-body #addActive').val(1);
+      } else {
+        modal.find('.modal-body #addActive').val(0);
+      }
+    }); // Get Sectors options while changing folder
+
+    $('#folder').on('change', function () {
+      var folder_id = $(this).val();
+      var add_sector_options = '';
+
+      if (folder_id == 0) {
+        $('#sector').prop("disabled", true);
+        $('#service').prop("disabled", true);
+      } else {
+        $('#sector').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getSectors',
+        data: {
+          'id': folder_id
+        },
+        success: function success(sectors) {
+          add_sector_options += '<option value="0" selected>Sélectionner un secteur...</option>';
+          sectors.forEach(function (sector) {
+            add_sector_options += '<option value="' + sector.id + '">' + sector.name + '</option>';
+          });
+          $('#sector').find('option').remove().end().append(add_sector_options);
+        },
+        error: function error() {}
+      });
+    }); // Get Services options while changing sector
+
+    $('#sector').on('change', function () {
+      var sector_id = $(this).val();
+      var folder_id = $('#folder').val();
+      var add_service_options = '';
+
+      if (sector_id == 0) {
+        $('#service').prop("disabled", true);
+      } else {
+        $('#service').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getServices',
+        data: {
+          'id': sector_id
+        },
+        success: function success(services) {
+          add_service_options += '<option selected>Sélectionner un service...</option>';
+          services.forEach(function (service) {
+            add_service_options += '<option value="' + service.id + '">' + service.name + '</option>';
+          });
+          $('#service').find('option').remove().end().append(add_service_options);
+        },
+        error: function error() {}
+      });
+    });
+    $('#addForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-analytique",
+        data: $('#addForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue à la création du compte ! :( ');
+        }
+      });
+    });
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/analytic/delete.js":
+/*!************************************************!*\
+  !*** ./resources/js/modals/analytic/delete.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var DeleteAnalyticAccount = function () {
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var id = button.data('id');
+    var modal = $(this);
+    modal.find('.modal-body p').text("Voulez-vous supprimer le compte n° " + id + " de votre plan de compte ?");
+    $('#deleteForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "DELETE",
+        url: "/comptabilite-analytique/destroy/" + id,
+        data: $('#deleteForm').serialize(),
+        success: function success(response) {
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/analytic/edit.js":
+/*!**********************************************!*\
+  !*** ./resources/js/modals/analytic/edit.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var EditAnalyticAccount = function () {
+  $('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var datas = button.data('object');
+    var modal = $(this);
+    console.log(datas);
+    modal.find('.modal-body #editActive').change(function () {
+      if (this.checked) {
+        modal.find('.modal-body #editActive').val(1);
+      } else {
+        modal.find('.modal-body #editActive').val(0);
+      }
+    }); // Fill form with datas of the row
+
+    if (datas.active === 1) {
+      modal.find('.modal-body #editActive').prop('checked', true);
+      modal.find('.modal-body #editActive').val(1);
+    } else {
+      modal.find('.modal-body #editActive').prop('checked', false);
+      modal.find('.modal-body #editActive').val(0);
+    }
+
+    var data_folder_id = datas.service.sector.folder.id;
+    var data_sector_id = datas.service.sector.id;
+    var data_service_id = datas.service.id;
+    modal.find('.modal-body #editId').val(datas.id);
+    modal.find('.modal-body #editName').val(datas.name);
+    modal.find('.modal-body #editStructure').val(datas.structure_id).prop("selected", true);
+    modal.find('.modal-body #editFolder').val(data_folder_id).prop("selected", true);
+    var folder_select = modal.find('#editFolder');
+    var sector_select = modal.find('#editSector');
+    var service_select = modal.find('#editService'); // Get current sector and sectors list according to current folder affected to current row
+
+    var sectors_options = '';
+    $.ajax({
+      type: 'GET',
+      url: '/getSectors',
+      data: {
+        'id': data_folder_id
+      },
+      success: function success(sectors) {
+        sectors.forEach(function (sector) {
+          sectors_options += '<option value="' + sector.id + '">' + sector.name + '</option>';
+        });
+        sector_select.find('option').remove().end().append(sectors_options);
+        sector_select.val(data_sector_id).prop("selected", true);
+      },
+      error: function error() {}
+    }); // Get current service and services list according to current sector affected to current row
+
+    var services_options = '';
+    $.ajax({
+      type: 'GET',
+      url: '/getServices',
+      data: {
+        'id': data_sector_id
+      },
+      success: function success(services) {
+        services.forEach(function (service) {
+          services_options += '<option value="' + service.id + '">' + service.name + '</option>';
+        });
+        service_select.find('option').remove().end().append(services_options);
+        service_select.val(data_service_id).prop("selected", true);
+      },
+      error: function error() {}
+    }); // Change Sectors options while changing folder select
+
+    modal.find(folder_select).on('change', function () {
+      var folder_id = $(this).val();
+      sector_select.find('option').remove().end();
+      service_select.find('option').remove().end().prop("disabled", true);
+
+      if (folder_id == 0) {
+        sector_select.prop("disabled", true);
+      } else {
+        sector_select.prop("disabled", false);
+      }
+
+      var new_sectors_options = '';
+      $.ajax({
+        type: 'GET',
+        url: '/getSectors',
+        data: {
+          'id': folder_id
+        },
+        success: function success(sectors) {
+          sector_select.empty();
+          new_sectors_options += '<option value="0" selected>Sélectionner un secteur...</option>';
+          sectors.forEach(function (sector) {
+            new_sectors_options += '<option value="' + sector.id + '">' + sector.name + '</option>';
+          });
+          sector_select.find('option').remove().end().append(new_sectors_options);
+        },
+        error: function error() {}
+      });
+    }); // Change Services options while changing sector select
+
+    modal.find(sector_select).on('change', function () {
+      var sector_id = $(this).val();
+
+      if (sector_id == 0) {
+        service_select.prop("disabled", true);
+      } else {
+        service_select.prop("disabled", false);
+      }
+
+      var new_services_options = '';
+      $.ajax({
+        type: 'GET',
+        url: '/getServices',
+        data: {
+          'id': sector_id
+        },
+        success: function success(services) {
+          new_services_options += '<option selected>Sélectionner un service...</option>';
+          services.forEach(function (service) {
+            new_services_options += '<option value="' + service.id + '">' + service.name + '</option>';
+          });
+          service_select.find('option').remove().end().append(new_services_options);
+        },
+        error: function error() {}
+      });
+    }); // Send datas
+
+    $('#editForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "PATCH",
+        url: "/comptabilite-analytique/edit/" + datas.id,
+        data: $('#editForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue à la modification du compte ! :( ');
+        }
+      });
+    });
+  });
+  $('#editModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.custom-select').prop("disabled", false);
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/fiscalYears/create.js":
+/*!***************************************************!*\
+  !*** ./resources/js/modals/fiscalYears/create.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AddFiscalYear = function () {
+  var months = {
+    1: ["01", "Janvier"],
+    2: ["02", "Février"],
+    3: ["03", "Mars"],
+    4: ["04", "Avril"],
+    5: ["05", "Mai"],
+    6: ["06", "Juin"],
+    7: ["07", "Juillet"],
+    8: ["08", "Août"],
+    9: ["09", "Septembre"],
+    10: ["10", "Octobre"],
+    11: ["11", "Novembre"],
+    12: ["12", "Décembre"]
+  }; // Add Modal script
+
+  $('#addFiscalYearModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var modal = $(this);
+    var nameInput = modal.find('.modal-body #addName');
+    var nameValInit = "Exercice ";
+    nameInput.val(nameValInit);
+    var monthStartSelectElt = modal.find('.modal-body #addMonthStart');
+
+    function getMonthStartVal() {
+      return monthStartSelectElt.val();
+    }
+
+    var monthEndSelectElt = modal.find('.modal-body #addMonthEnd');
+
+    function getMonthEndVal() {
+      return monthEndSelectElt.val();
+    }
+
+    var yearStartSelectElt = modal.find('.modal-body #addYearStart');
+
+    function getYearStartVal() {
+      return yearStartSelectElt.val();
+    }
+
+    var yearEndSelectElt = modal.find('.modal-body #addYearEnd');
+
+    function getYearEndVal() {
+      return yearEndSelectElt.val();
+    } // Month select changing
+
+
+    monthStartSelectElt.change(function () {
+      modal.find('.modal-body #addMonthEnd .monthEndOp').remove();
+      var monthSelect = $(this);
+      var monthStart = getMonthStartVal();
+
+      function appendMonthEndOption(value) {
+        var monthEndOp = '<option class="monthEndOp" value="' + months[value][0] + '" selected>' + months[value][1] + '</option>';
+        monthEndSelectElt.append(monthEndOp);
+      }
+
+      if (monthStart == "01") {
+        var monthEnd = 12;
+        appendMonthEndOption(monthEnd);
+
+        if (getYearStartVal() == getYearEndVal()) {
+          return;
+        } else {
+          modal.find('.modal-body #addYearStart, .modal-body #addYearEnd').val("0");
+          nameInput.val(nameValInit);
+        }
+      } else {
+        var _monthEnd = parseInt(monthStart) - 1;
+
+        appendMonthEndOption(_monthEnd);
+
+        if (getYearStartVal() == getYearEndVal()) {
+          modal.find('.modal-body #addYearStart, .modal-body #addYearEnd').val("0");
+          nameInput.val(nameValInit);
+        } else {
+          return;
+        }
+      }
+    }); // Year select changing
+
+    yearStartSelectElt.change(function () {
+      modal.find('.modal-body #addMonthEnd .yearEndOp').remove();
+      nameInput.val(nameValInit);
+      var nameVal = '';
+      var yearSelect = $(this);
+      var yearStart = yearSelect.val();
+      var yearEnd = '';
+      var monthStart = getMonthStartVal();
+
+      function appendYearEndOption(value) {
+        var yearEndOp = '<option class="yearEndOp" value="' + value + '" selected>' + value + '</option>';
+        yearEndSelectElt.append(yearEndOp);
+      }
+
+      if (monthStart == "01") {
+        yearEnd = parseInt(yearStart);
+        appendYearEndOption(yearEnd);
+      } else {
+        yearEnd = parseInt(yearStart) + 1;
+        appendYearEndOption(yearEnd);
+      }
+    });
+    modal.find('select').change(function () {
+      var monthStart = getMonthStartVal();
+      var monthEnd = getMonthEndVal();
+      var yearStart = getYearStartVal();
+      var yearEnd = getYearEndVal();
+      nameVal = nameValInit + monthStart + '-' + yearStart + '/' + monthEnd + '-' + yearEnd;
+      nameInput.val(nameVal);
+    }); // Name input automatic filling
+
+    $('#addFiscalYearForm').on('submit', function (e) {
+      e.preventDefault();
+      console.log($('#addFiscalYearForm').serialize());
+      $.ajax({
+        type: "POST",
+        url: "/storeFiscalYear",
+        data: $('#addFiscalYearForm').serialize(),
+        success: function success(response) {
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          alert('Une erreur est survenue à la création du compte ! :( ');
+        }
+      });
+    });
+  });
+  $('#addFiscalYearModal').on('hide.bs.modal', function (event) {
+    var modal = $(this);
+    modal.find('.modal-body #addMonthEnd .monthEndOp').remove();
+    modal.find('.modal-body #addMonthEnd .yearEndOp').remove();
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/general/activate.js":
+/*!*************************************************!*\
+  !*** ./resources/js/modals/general/activate.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var ActivateGeneralAccount = function () {
+  $('#activateToggleModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    var input = '';
+    $('.checkAccount:checkbox:checked').each(function (i) {
+      rowId = $(this).val();
+      input = "<input type='hidden' class='selectedRow' name='row" + [i] + "' value='" + rowId + "'>";
+      modal.find('.selected-rows-list').append(input);
+    });
+    var button = $(event.relatedTarget);
+    var action = button.data('action');
+    var state = button.data('state');
+    modal.find('.modal-body p').text("Êtes-vous sûr de modifier " + modal.find('.modal-body .selectedRow').length + " comptes en '" + state + "' ?");
+    $('#activateToggleForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-generale/" + action,
+        data: $('#activateToggleForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+  $('#activateToggleModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.modal-body .selected-rows-list').empty();
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/general/affect.js":
+/*!***********************************************!*\
+  !*** ./resources/js/modals/general/affect.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AffectGeneralAccount = function () {
+  $('#affectModal').on('show.bs.modal', function (event) {
+    var modal = $(this);
+    var input = '';
+    $('.checkAccount:checkbox:checked').each(function (i) {
+      rowId = $(this).val();
+      input = "<input type='hidden' class='selectedRow' name='row" + [i] + "' value='" + rowId + "'>";
+      modal.find('.modal-body .selected-rows-list').append(input);
+    });
+    modal.find('.modal-body p').text("Veuillez affecter les " + modal.find('.modal-body .selectedRow').length + " comptes sélectionnés :"); // Get lines options while changing group
+
+    $('#affectCerfa1Group').on('change', function () {
+      var group_id = $(this).val();
+      var affect_cerfa1Line_options = '';
+
+      if (group_id == 0) {
+        $('#affectCerfa1Line').prop("disabled", true);
+      } else {
+        $('#affectCerfa1Line').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getCerfa1Lines',
+        data: {
+          'id': group_id
+        },
+        success: function success(lines) {
+          affect_cerfa1Line_options += '<option value="0" selected>Sélectionner un secteur...</option>';
+          lines.forEach(function (line) {
+            affect_cerfa1Line_options += '<option value="' + line.id + '">' + line.name + '</option>';
+          });
+          $('#affectCerfa1Line').find('option').remove().end().append(affect_cerfa1Line_options);
+        },
+        error: function error() {}
+      });
+    });
+    $('#affectForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-generale/affect",
+        data: $('#affectForm').serialize(),
+        success: function success(response) {
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+  $('#affectModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.modal-body .selected-rows-list').empty();
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/general/create.js":
+/*!***********************************************!*\
+  !*** ./resources/js/modals/general/create.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AddGeneralAccount = function () {
+  $('#addModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+    var modal = $(this);
+    modal.find('.modal-body #addActive').prop('checked', true);
+    modal.find('.modal-body #addActive').change(function () {
+      if (this.checked) {
+        modal.find('.modal-body #addActive').val(1);
+      } else {
+        modal.find('.modal-body #addActive').val(0);
+      }
+    }); // Get Sectors options while changing group
+
+    $('#addCerfa1Group').on('change', function () {
+      var group_id = $(this).val();
+      var add_line_options = '';
+
+      if (group_id == 0) {
+        $('#addCerfa1Line').prop("disabled", true);
+      } else {
+        $('#addCerfa1Line').prop("disabled", false);
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: '/getCerfa1Lines',
+        data: {
+          'id': group_id
+        },
+        success: function success(lines) {
+          add_line_options += '<option value="0" selected>Sélectionner une ligne...</option>';
+          lines.forEach(function (line) {
+            add_line_options += '<option value="' + line.id + '">' + line.name + '</option>';
+          });
+          $('#addCerfa1Line').find('option').remove().end().append(add_line_options);
+        },
+        error: function error() {}
+      });
+    });
+    $('#addForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/comptabilite-generale",
+        data: $('#addForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue à la création du compte ! :( ');
+        }
+      });
+    });
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/general/delete.js":
+/*!***********************************************!*\
+  !*** ./resources/js/modals/general/delete.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var DeleteGeneralAccount = function () {
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var id = button.data('id');
+    var modal = $(this);
+    modal.find('.modal-body p').text("Voulez-vous supprimer le compte n° " + id + " de votre plan de compte ?");
+    $('#deleteForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "DELETE",
+        url: "/comptabilite-generale/destroy/" + id,
+        data: $('#deleteForm').serialize(),
+        success: function success(response) {
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          alert('Une erreur est survenue :( ');
+        }
+      });
+    });
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modals/general/edit.js":
+/*!*********************************************!*\
+  !*** ./resources/js/modals/general/edit.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var EditGeneralAccount = function () {
+  $('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var datas = button.data('object');
+    var modal = $(this);
+    modal.find('.modal-body #editActive').change(function () {
+      if (this.checked) {
+        modal.find('.modal-body #editActive').val(1);
+      } else {
+        modal.find('.modal-body #editActive').val(0);
+      }
+    }); // Fill form with datas of the row
+
+    if (datas.active === 1) {
+      modal.find('.modal-body #editActive').prop('checked', true);
+      modal.find('.modal-body #editActive').val(1);
+    } else {
+      modal.find('.modal-body #editActive').prop('checked', false);
+      modal.find('.modal-body #editActive').val(0);
+    }
+
+    modal.find('.modal-body #editId').val(datas.id);
+    modal.find('.modal-body #editName').val(datas.name);
+
+    if (datas.cerfa1_line !== null) {
+      modal.find('.modal-body #editCerfa1Group').val(datas.cerfa1_line.cerfa1_group.id).prop("selected", true); // Get current line option
+
+      var edit_line_options = '';
+      $.ajax({
+        type: 'GET',
+        url: '/getCerfa1Lines',
+        data: {
+          'id': datas.cerfa1_line.cerfa1_group.id
+        },
+        success: function success(lines) {
+          lines.forEach(function (line) {
+            edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>';
+          });
+          $('#editCerfa1Line').find('option').remove().end().append(edit_line_options);
+          $('#editCerfa1Line').val(datas.cerfa1_line.id).prop("selected", true);
+        },
+        error: function error() {}
+      }); // Get Lines options while changing group
+
+      $('#editCerfa1Group').on('change', function () {
+        var group_id = $(this).val();
+        var edit_line_options = '';
+
+        if (group_id == 0) {
+          $('#editCerfa1Line').prop("disabled", true);
+        } else {
+          $('#editCerfa1Line').prop("disabled", false);
+        }
+
+        $.ajax({
+          type: 'GET',
+          url: '/getCerfa1Lines',
+          data: {
+            'id': group_id
+          },
+          success: function success(lines) {
+            edit_line_options += '<option value="0" selected>Sélectionner une ligne...</option>';
+            lines.forEach(function (line) {
+              edit_line_options += '<option value="' + line.id + '">' + line.name + '</option>';
+            });
+            $('#editCerfa1Line').find('option').remove().end().append(edit_line_options);
+          },
+          error: function error() {}
+        });
+      });
+    } else {
+      modal.find('.modal-body #editCerfa1Group').val(0);
+      modal.find('#editCerfa1Line').find('option').remove().end().prop("disabled", true);
+    }
+
+    $('#editForm').on('submit', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "PATCH",
+        url: "/comptabilite-generale/edit/" + datas.id,
+        data: $('#editForm').serialize(),
+        success: function success(response) {
+          console.log(response);
+          modal.modal('hide');
+          location.reload();
+        },
+        error: function error(_error) {
+          console.log(_error);
+          alert('Une erreur est survenue à la modification du compte ! :( ');
+        }
+      });
+    });
+  });
+  $('#editModal').on('hide.bs.modal', function () {
+    var modal = $(this);
+    modal.find('.custom-select').prop("disabled", false);
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/tables/analytics.js":
+/*!******************************************!*\
+  !*** ./resources/js/tables/analytics.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var AnalyticsTable = function () {
+  var table = $('#analytic-accounts').DataTable({
+    paging: false,
+    language: {
+      "zeroRecords": "Aucun résultat",
+      "info": "Affiche de _START_ à _END_ sur _TOTAL_ lignes",
+      "infoEmpty": "",
+      "emptyTable": "Aucune donnée à afficher. Importez d'abord votre plan de compte",
+      "infoFiltered": "(Filtré par _MAX_ total entrées)",
+      "decimal": ",",
+      "thousands": " "
+    },
+    columnDefs: [{
+      "targets": [7],
+      "visible": false
+    }]
+  });
+  $('#analytic-accounts_wrapper .row:first-child').hide(); // Rows "select all"
+
+  $('#checkAll').change(function () {
+    $('.checkAccount').prop('checked', $(this).prop('checked'));
+  }); // Enabled or disabled actions button for selection
+
+  $('.checkAccount, #checkAll').change(function () {
+    if ($('input:checkbox:checked').length > 0) {
+      $('.select-action').removeClass('disabled');
+      $('.select-action').css('pointer-events', 'initial');
+    } else {
+      $('.select-action').addClass('disabled');
+      $('.select-action').css('pointer-events', 'none');
+    }
+  }); // Filter 'active'
+
+  $('#activeSelect').change(function () {
+    table.column($(this).data('column')).search($(this).val()).draw();
+    console.log($(this).val());
+  });
+  $('#searchInput').on('keyup', function () {
+    table.search(this.value).draw();
+  }); // spin effect on hover icon
+
+  $('.fa-sync-alt').hover(function () {
+    $(this).addClass('fa-spin');
+  }, function () {
+    $(this).removeClass('fa-spin');
+  }); // reloading page
+
+  $('#reloadAccounts').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "GET",
+      url: "/comptabilite-analytique",
+      success: function success(response) {
+        location.reload();
+      },
+      error: function error(_error) {
+        console.log(_error);
+        alert('Une erreur est survenue ! :( ');
+      }
+    });
+  });
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/tables/generals.js":
+/*!*****************************************!*\
+  !*** ./resources/js/tables/generals.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var GeneralsTable = function () {
+  var table = $('#general-accounts').DataTable({
+    paging: false,
+    language: {
+      "zeroRecords": "Aucun résultat",
+      "info": "Affiche de _START_ à _END_ sur _TOTAL_ lignes",
+      "infoEmpty": "",
+      "emptyTable": "Aucune donnée à afficher. Importez d'abord votre plan de compte",
+      "infoFiltered": "(Filtré par _MAX_ total entrées)",
+      "decimal": ",",
+      "thousands": " "
+    },
+    columnDefs: [{
+      "targets": [2, 4],
+      "visible": false
+    }]
+  }); // Hide default search row
+
+  $('#general-accounts_wrapper .row:first-child').hide(); // Rows "select all"
+
+  $('#checkAll').change(function () {
+    $('.checkAccount').prop('checked', $(this).prop('checked'));
+  }); // Enabled or disabled actions button for selection
+
+  $('.checkAccount, #checkAll').change(function () {
+    if ($('input:checkbox:checked').length > 0) {
+      $('.select-action').removeClass('disabled');
+      $('.select-action').css('pointer-events', 'initial');
+    } else {
+      $('.select-action').addClass('disabled');
+      $('.select-action').css('pointer-events', 'none');
+    }
+  }); // Filter 'active'
+
+  $('#activeSelect').change(function () {
+    table.column($(this).data('column')).search($(this).val()).draw();
+    console.log($(this).val());
+  });
+  $('#searchInput').on('keyup', function () {
+    table.search(this.value).draw();
+  }); // spin effect on hover icon
+
+  $('.fa-sync-alt').hover(function () {
+    $(this).addClass('fa-spin');
+  }, function () {
+    $(this).removeClass('fa-spin');
+  }); // reloading page
+
+  $('#reloadAccounts').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "GET",
+      url: "/comptabilite-generale",
+      success: function success(response) {
+        location.reload();
+      },
+      error: function error(_error) {
+        console.log(_error);
+        alert('Une erreur est survenue ! :( ');
+      }
+    });
+  });
+}(jQuery);
 
 /***/ }),
 
