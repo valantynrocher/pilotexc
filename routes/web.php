@@ -56,3 +56,7 @@ Route::post('storeFiscalYear', 'ParametersController@storeFiscalYear')->name('pa
 
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
 Route::post('import', 'ScripturesController@import')->name('scriptures.import');
+
+
+Route::get('vueJs', 'UsersController@vueJs');
+Route::get('axios', 'Userscontroller@axios');
