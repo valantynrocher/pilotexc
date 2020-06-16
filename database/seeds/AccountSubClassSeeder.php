@@ -13,6 +13,6 @@ class AccountSubClassSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new AccountSubClassImport, 'public/excel_bases/account_subclasses_import.xlsx');
+        Excel::import(new AccountSubClassImport, 'public/storage/imports/account_subclasses_import.xlsx');
     }
 }

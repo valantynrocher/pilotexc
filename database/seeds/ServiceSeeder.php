@@ -13,6 +13,6 @@ class ServiceSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new ServicesImport, 'public/excel_bases/services_import.xlsx');
+        Excel::import(new ServicesImport, 'public/storage/imports/services_import.xlsx');
     }
 }

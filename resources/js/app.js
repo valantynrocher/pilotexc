@@ -1,22 +1,7 @@
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
 require('./bootstrap');
-require('./adminlte/adminlte');
-require('./adminlte/Treeview');
-
-$(document).ready(function () {
-    require('./modals/analytic/create');
-    require('./modals/analytic/affect');
-    require('./modals/analytic/activate');
-    require('./modals/analytic/edit');
-    require('./modals/analytic/delete');
-    require('./modals/general/create');
-    require('./modals/general/affect');
-    require('./modals/general/activate');
-    require('./modals/general/edit');
-    require('./modals/general/delete');
-    require('./modals/fiscalYears/create');
-})
-
-$(document).ready(function () {
-    require('./tables/analytics');
-    require('./tables/generals');
-})

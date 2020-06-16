@@ -11,8 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(AccountClassSeeder::class);
-        $this->call(AccountSubClassSeeder::class);
+        // $this->call(AccountClassSeeder::class);
+        // $this->call(AccountSubClassSeeder::class);
         $this->call(Cerfa1GroupSeeder::class);
         $this->call(Cerfa1LineSeeder::class);
         $this->call(GeneralAccountSeeder::class);

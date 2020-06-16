@@ -22,6 +22,11 @@ class CreateAnalyticAccountsTable extends Migration
             $table->bigInteger('in_charge_id')->unsigned()->nullable();
             $table->bigInteger('client_id')->unsigned()->nullable();
         });
+
+        Schema::table('analytic_accounts', function (Blueprint $table) {
+            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('structure_id')->references('id')->on('structures');
+        });
     }
 
     /**

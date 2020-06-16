@@ -3,13 +3,8 @@
 namespace App\Imports;
 
 use Carbon\Carbon;
-use App\ImportScriptures;
-use Illuminate\Validation\Rule;
+use App\Models\ImportScriptures;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\WithValidation;
 
 class ScripturesImport implements ToModel
 // , WithValidation, SkipsOnFailure

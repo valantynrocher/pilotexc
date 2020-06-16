@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\AnalyticAccount;
+use App\Models\AnalyticAccount;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class AnalyticAccountsImport implements ToModel

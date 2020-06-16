@@ -13,6 +13,6 @@ class Cerfa1GroupSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new Cerfa1GroupsImport, 'public/excel_bases/cerfa1_groups_import.xlsx');
+        Excel::import(new Cerfa1GroupsImport, 'public/storage/imports/cerfa1_groups_import.xlsx');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Folder;
+use App\Models\Folder;
 use Illuminate\Database\Seeder;
 
 class FolderSeeder extends Seeder
