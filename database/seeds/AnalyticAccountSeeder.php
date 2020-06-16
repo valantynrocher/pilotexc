@@ -13,6 +13,6 @@ class AnalyticAccountSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new AnalyticAccountsImport, 'public/excel_bases/analytics_accounts_import.xlsx');
+        Excel::import(new AnalyticAccountsImport, 'public/storage/imports/analytics_accounts_import.xlsx');
     }
 }

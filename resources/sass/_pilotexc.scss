@@ -4,6 +4,6 @@
     max-height: 40px;
 }
 
-.select-action {
-    pointer-events: none;
+.select-action.disabled {
+    pointer-events: none !important;
 }

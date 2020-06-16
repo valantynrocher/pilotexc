@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\AccountSubclass;
+use App\Models\AccountSubclass;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class AccountSubClassImport implements ToModel

@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Cerfa1Line;
+use App\Models\Cerfa1Line;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class Cerfa1LinesImport implements ToModel

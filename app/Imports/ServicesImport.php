@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Service;
+use App\Models\Service;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class ServicesImport implements ToModel

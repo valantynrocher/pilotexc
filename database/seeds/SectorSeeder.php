@@ -1,6 +1,6 @@
 <?php
 
-use App\Sector;
+use App\Models\Sector;
 use Illuminate\Database\Seeder;
 
 class SectorSeeder extends Seeder

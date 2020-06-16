@@ -13,6 +13,6 @@ class GeneralAccountSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new GeneralAccountsImport, 'public/excel_bases/general_accounts_import.xlsx');
+        Excel::import(new GeneralAccountsImport, 'public/storage/imports/general_accounts_import.xlsx');
     }
 }

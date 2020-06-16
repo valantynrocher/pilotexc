@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,48 +14,78 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Redirect for root path
-Route::get('/', function () {
-    return redirect()->route('dashboard.index');
-});
+// Redirection
+Route::permanentRedirect('/', '/tableau-de-bord');
+Route::permanentRedirect('/home', '/tableau-de-bord');
 
+// Authentication
 Auth::routes();
 
-Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard.index');
-Route::get('rapport/evolution-analytique-secteur/{id}', 'DashboardController@analyticalEvolutionChart')->name('dashboard.analyticalEvolutionChart');
-Route::get('rapport/repartition-produits-annee/{id}', 'DashboardController@productsDivisionChart')->name('dashboard.productsDivisionChart');
-Route::get('rapport/repartition-charges-personnel/{id}', 'DashboardController@salaryChargesChart')->name('dashboard.salaryChargesChart');
+// Views routes
+Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard');
+Route::get('ecritures', 'ScripturesController@index')->name('scriptures');
+Route::group(['prefix' => 'parametres'], function () {
+    Route::get('generalites', 'ParametersController@index')->name('parameters');
+    Route::get('plan-comptes-general', 'ParametersController@generalAccounts')->name('generalAccounts');
+    Route::get('plan-compte-analytique', 'ParametersController@analyticAccounts')->name('analyticAccounts');
+});
 
-Route::get('utilisateurs', 'UsersController@index')->name('users.index');
+// API routes
+Route::group(['prefix' => 'api'], function () {
+    // Api\\Cerfa1Controller
+    // endpoint : /api/cerfa1/...
+    Route::group(['prefix' => 'cerfa1'], function () {
+        Route::get('group/{Cerfa1Group}/lines', 'Api\\Cerfa1Controller@linesByGroup')->name('api.cerfa1.getLines');
+        Route::get('groups', 'Api\\Cerfa1Controller@groups')->name('api.cerfa1.getGroups');
+    });
 
-// Attention : les changements d'URL sur ces routes pètent les appels Ajax
-Route::get('comptabilite-analytique', 'AnalyticAccountsController@index')->name('analyticAccounts.index');
-Route::post('comptabilite-analytique', 'AnalyticAccountsController@store')->name('analyticAccounts.store');
-Route::patch('comptabilite-analytique/edit/{id}', 'AnalyticAccountsController@update')->name('analyticAccounts.update');
-Route::delete('comptabilite-analytique/destroy/{id}', 'AnalyticAccountsController@destroy')->name('analyticAccounts.destroy');
-Route::post('comptabilite-analytique/affect', 'AnalyticAccountsController@affect')->name('analyticAccounts.affect');
-Route::post('comptabilite-analytique/activate', 'AnalyticAccountsController@activate')->name('analyticAccounts.activate');
-Route::post('comptabilite-analytique/desactivate', 'AnalyticAccountsController@desactivate')->name('analyticAccounts.desactivate');
-Route::get('getSectors', 'AnalyticAccountsController@getSectors')->name('analyticAccounts.getSectors');
-Route::get('getServices', 'AnalyticAccountsController@getServices')->name('analyticAccounts.getServices');
+    // Api\\GeneralAccountsController
+    // endpoint : /api/generalAccounts/...
+    Route::group(['prefix' => 'generalAccounts'], function () {
+        Route::get('', 'Api\\GeneralAccountsController@index')->name('api.generalAccounts');
+        Route::post('', 'Api\\GeneralAccountsController@store')->name('api.generalAccounts.store');
+        Route::get('edit/{id}', 'Api\\GeneralAccountsController@edit')->name('api.generalAccounts.edit');
+        Route::patch('update/{id}', 'Api\\GeneralAccountsController@update')->name('api.analyticAccounts.update');
+        Route::delete('destroy/{generalAccount}', 'Api\\GeneralAccountsController@destroy')->name('api.generalAccounts.destroy');
+        Route::post('activate', 'Api\\GeneralAccountsController@activate')->name('api.generalAccounts.activate');
+        Route::post('desactivate', 'Api\\GeneralAccountsController@desactivate')->name('api.generalAccounts.desactivate');
+        Route::post('affect', 'Api\\GeneralAccountsController@affect')->name('api.generalAccounts.affect');
+    });
 
-// Attention : les changements d'URL sur ces routes pètent les appels Ajax
-Route::get('comptabilite-generale', 'GeneralAccountsController@index')->name('generalAccounts.index');
-Route::post('comptabilite-generale', 'GeneralAccountsController@store')->name('generalAccounts.store');
-Route::patch('comptabilite-generale/edit/{id}', 'GeneralAccountsController@update')->name('generalAccounts.update');
-Route::delete('comptabilite-generale/destroy/{id}', 'GeneralAccountsController@destroy')->name('generalAccounts.destroy');
-Route::post('comptabilite-generale/affect', 'GeneralAccountsController@affect')->name('generalAccounts.affect');
-Route::post('comptabilite-generale/activate', 'GeneralAccountsController@activate')->name('generalAccounts.activate');
-Route::post('comptabilite-generale/desactivate', 'GeneralAccountsController@desactivate')->name('generalAccounts.desactivate');
-Route::get('getCerfa1Lines', 'GeneralAccountsController@getCerfa1Lines')->name('generalAccounts.getCerfa1Lines');
+    // Api\\AnalyticAccountsController
+    // endpoint : /api/analyticAccounts/...
+    Route::group(['prefix' => 'analyticAccounts'], function () {
+        Route::get('', 'Api\\AnalyticAccountsController@index')->name('api.analyticAccounts');
+        Route::post('', 'Api\\AnalyticAccountsController@store')->name('api.analyticAccounts.store');
+        Route::get('edit/{id}', 'Api\\AnalyticAccountsController@edit')->name('api.analyticAccounts.edit');
+        Route::patch('update/{id}', 'Api\\AnalyticAccountsController@update')->name('api.analyticAccounts.update');
+        Route::delete('destroy/{id}', 'Api\\AnalyticAccountsController@destroy')->name('api.analyticAccounts.destroy');
+        Route::post('activate', 'Api\\AnalyticAccountsController@activate')->name('api.analyticAccounts.activate');
+        Route::post('desactivate', 'Api\\AnalyticAccountsController@desactivate')->name('api.analyticAccounts.desactivate');
+        Route::post('affect', 'Api\\AnalyticAccountsController@affect')->name('api.analyticAccounts.affect');
+    });
 
+    // Api\\SectorsController
+    // endpoint : /api/sectors/...
+    Route::group(['prefix' => 'sectors'], function () {
+        Route::get('folder/{Folder}', 'Api\\SectorsController@sectorsByFolder')->name('api.sectors.byFolder');
+    });
 
-Route::get('paramètres', 'ParametersController@index')->name('parameters.index');
-Route::post('storeFiscalYear', 'ParametersController@storeFiscalYear')->name('parameters.storeFiscalYear');
+    // Api\\ServicesController
+    // endpoint : /api/services/...
+    Route::group(['prefix' => 'services'], function () {
+        Route::get('sector/{Sector}', 'Api\\ServicesController@servicesBySector')->name('api.services.getServices');
+    });
 
-Route::get('ecritures', 'ScripturesController@index')->name('scriptures.index');
-Route::post('import', 'ScripturesController@import')->name('scriptures.import');
+    // Api\\StructuresController
+    // endpoint : /api/structures/...
+    Route::group(['prefix' => 'structures'], function () {
+        Route::get('', 'Api\\StructuresController@index')->name('api.structures');
+    });
 
-
-Route::get('vueJs', 'UsersController@vueJs');
-Route::get('axios', 'Userscontroller@axios');
+    // Api\\FoldersController
+    // endpoint : /api/folders/...
+    Route::group(['prefix' => 'folders'], function () {
+        Route::get('', 'Api\\FoldersController@index')->name('api.folders');
+    });
+});

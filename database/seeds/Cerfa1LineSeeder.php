@@ -13,6 +13,6 @@ class Cerfa1LineSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new Cerfa1LinesImport, 'public/excel_bases/cerfa1_lines_import.xlsx');
+        Excel::import(new Cerfa1LinesImport, 'public/storage/imports/cerfa1_lines_import.xlsx');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Cerfa1Group;
+use App\Models\Cerfa1Group;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class Cerfa1GroupsImport implements ToModel

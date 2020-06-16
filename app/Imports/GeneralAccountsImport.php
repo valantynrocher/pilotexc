@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\GeneralAccount;
+use App\Models\GeneralAccount;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class GeneralAccountsImport implements ToModel
