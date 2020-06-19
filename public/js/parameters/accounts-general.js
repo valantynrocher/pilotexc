@@ -611,6 +611,11 @@ $('#editModal').on('show.bs.modal', function (e) {
         response.forEach(function (cerfaGroup) {
           selectCerfaGroup.append("<option value=".concat(cerfaGroup.id, ">").concat(cerfaGroup.name, "</option>"));
         });
+
+        if (account.cerfa1_line !== null) {
+          // Select current cerfa group
+          selectCerfaGroup.val(account.cerfa1_line.cerfa1_group_id).prop("selected", true);
+        }
       },
       error: function (_error2) {
         function error() {
@@ -629,6 +634,7 @@ $('#editModal').on('show.bs.modal', function (e) {
 
     if (account.cerfa1_line !== null) {
       var cerfaLinesSuccess = function cerfaLinesSuccess(response) {
+        console.log(response);
         response.forEach(function (line) {
           lineOp += "<option value=\"".concat(line.id, "\">").concat(line.name, "</option>");
         }); // Clear cerfa line options / append new options / select current cerfa line
@@ -636,12 +642,11 @@ $('#editModal').on('show.bs.modal', function (e) {
         selectCerfaLine.find('option').remove().end().append(lineOp).val(account.cerfa1_line.id).prop("selected", true).prop("disabled", false);
       };
 
-      selectCerfaGroup.val(account.cerfa1_line.cerfa1_groupId).prop("selected", true); // Get cerfa line options
-
+      // Get cerfa line options
       var lineOp = '';
       $.ajax({
         type: 'GET',
-        url: "/api/cerfa1/group/".concat(account.cerfa1_line.cerfa1_groupId, "/lines"),
+        url: "/api/cerfa1/group/".concat(account.cerfa1_line.cerfa1_group_id, "/lines"),
         success: cerfaLinesSuccess,
         error: function (_error3) {
           function error() {
@@ -705,7 +710,7 @@ $('#editModal').on('show.bs.modal', function (e) {
   }); // Submit form
 
   $('#editForm').on('submit', function (e) {
-    e.preDefault();
+    e.preventDefault();
     var accountId = inputId.val();
     $.ajax({
       type: "PATCH",
@@ -726,7 +731,7 @@ $('#editModal').on('show.bs.modal', function (e) {
 
         return error;
       }(function (error) {
-        console.log(error.responseText.message);
+        console.log(error);
         alert("Une erreur est survenue. Vérifiez que les champs marqués d'un * sont renseignés, puis recommencez.");
       })
     });
@@ -747,7 +752,7 @@ $('#editModal').on('hide.bs.modal', function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/valou/Documents/DEV-WEB/PROJETS-LARAVEL/Pilotexc2/resources/js/parameters/accounts-general.js */"./resources/js/parameters/accounts-general.js");
+module.exports = __webpack_require__(/*! /Users/valou/Documents/DEV-WEB/PROJETS-LARAVEL/Pilotexc-lar/resources/js/parameters/accounts-general.js */"./resources/js/parameters/accounts-general.js");
 
 
 /***/ })

@@ -14,4 +14,6 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/parameters/accounts-general.js', 'public/js/parameters')
     .js('resources/js/parameters/accounts-analytic.js', 'public/js/parameters')
+    .js('resources/js/parameters/fiscal-years.js', 'public/js/parameters')
+    .js('resources/js/scriptures/scriptures.js', 'public/js/scriptures')
     .sass('resources/sass/app.scss', 'public/css');

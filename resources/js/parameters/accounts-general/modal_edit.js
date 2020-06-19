@@ -45,23 +45,26 @@ $('#editModal').on('show.bs.modal', function(e) {
                 response.forEach(cerfaGroup => {
                     selectCerfaGroup.append(`<option value=${cerfaGroup.id}>${cerfaGroup.name}</option>`)
                 });
+                if (account.cerfa1_line !== null) {
+                    // Select current cerfa group
+                    selectCerfaGroup.val(account.cerfa1_line.cerfa1_group_id).prop("selected", true)
+                }
             },
-            error:function(){console.log(error.responseText.message)}
+            error:function() {console.log(error.responseText.message)}
         })
 
         // Check if current account is affected to a cerfa line
         if (account.cerfa1_line !== null) {
-            selectCerfaGroup.val(account.cerfa1_line.cerfa1_groupId).prop("selected", true)
-
             // Get cerfa line options
             let lineOp = ''
             $.ajax({
                 type: 'GET',
-                url: `/api/cerfa1/group/${account.cerfa1_line.cerfa1_groupId}/lines`,
+                url: `/api/cerfa1/group/${account.cerfa1_line.cerfa1_group_id}/lines`,
                 success: cerfaLinesSuccess,
-                error:function(){console.log(error.responseText.message)}
+                error:function() {console.log(error.responseText.message)}
             })
             function cerfaLinesSuccess(response) {
+                console.log(response)
                 response.forEach(line => {
                     lineOp += `<option value="${line.id}">${line.name}</option>`
                 });
@@ -104,7 +107,7 @@ $('#editModal').on('show.bs.modal', function(e) {
 
     // Submit form
     $('#editForm').on('submit', function(e) {
-        e.preDefault()
+        e.preventDefault()
         let accountId = inputId.val()
 
         $.ajax({
@@ -116,14 +119,14 @@ $('#editModal').on('show.bs.modal', function(e) {
                 location.reload()
             },
             error: function(error) {
-                console.log(error.responseText.message)
+                console.log(error)
                 alert("Une erreur est survenue. Vérifiez que les champs marqués d'un * sont renseignés, puis recommencez.")
             }
         })
 
     })
 })
-$('#editModal').on('hide.bs.modal', function () {
+$('#editModal').on('hide.bs.modal', function() {
     $(this).find('input').val('')
     $(this).find('#editCerfa1Group').find('option').remove().end().append("<option value='0'>Sélectionner un groupe...</option>")
     $(this).find('#editCerfa1Line').find('option').remove().end().prop("disabled", true)

@@ -25,8 +25,10 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
+        "@jkryszto/mdb-for-laravel": "^1.0.0",
         "bootstrap-table": "^1.16.0",
         "icheck-bootstrap": "^3.0.1",
+        "mdbootstrap": "^4.19.0",
         "overlayscrollbars": "^1.12.0"
     }
 }

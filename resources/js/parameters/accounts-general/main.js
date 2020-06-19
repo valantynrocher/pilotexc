@@ -1,4 +1,3 @@
-
 const url = "/api/generalAccounts"
 
 // Datatable init

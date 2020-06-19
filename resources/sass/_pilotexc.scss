@@ -7,3 +7,15 @@
 .select-action.disabled {
     pointer-events: none !important;
 }
+
+.custom-file-input ~ .custom-file-label::after {
+    content: "Parcourir";
+    background-color: #ffc107;
+    color: #1f2d3d;
+}
+
+td.details-control {
+    color: #3c8dbc;
+    font-size: 18px;
+    cursor: pointer;
+}

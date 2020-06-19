@@ -26,8 +26,9 @@ Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard');
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures');
 Route::group(['prefix' => 'parametres'], function () {
     Route::get('generalites', 'ParametersController@index')->name('parameters');
-    Route::get('plan-comptes-general', 'ParametersController@generalAccounts')->name('generalAccounts');
-    Route::get('plan-compte-analytique', 'ParametersController@analyticAccounts')->name('analyticAccounts');
+    Route::get('exercices-comptables', 'ParametersController@fiscalYears')->name('parameters.fiscalYears');
+    Route::get('plan-comptes-general', 'ParametersController@generalAccounts')->name('parameters.generalAccounts');
+    Route::get('plan-compte-analytique', 'ParametersController@analyticAccounts')->name('parameters.analyticAccounts');
 });
 
 // API routes
@@ -87,5 +88,27 @@ Route::group(['prefix' => 'api'], function () {
     // endpoint : /api/folders/...
     Route::group(['prefix' => 'folders'], function () {
         Route::get('', 'Api\\FoldersController@index')->name('api.folders');
+    });
+
+    // Api\\FiscalYearsController
+    // endpoint : /api/fiscalYears/...
+    Route::group(['prefix' => 'fiscalYears'], function () {
+        Route::get('', 'Api\\FiscalYearsController@index')->name('api.fiscalYears');
+        Route::post('', 'Api\\FiscalYearsController@store')->name('api.fiscalYears.store');
+        Route::get('edit/{id}', 'Api\\FiscalYearsController@edit')->name('api.fiscalYears.edit');
+        Route::patch('update/{id}', 'Api\\FiscalYearsController@update')->name('api.fiscalYears.update');
+        Route::get('inProgress', 'Api\\FiscalYearsController@getInProgress')->name('api.fiscalYears.inProgress');
+    });
+
+    // Api\\ScripturesController
+    // endpoint: /api/scriptures/...
+    Route::group(['prefix' => 'scriptures'], function () {
+        Route::get('', 'Api\\ScripturesController@index')->name('api.scriptures');
+        Route::post('import', 'Api\\ScripturesController@import')->name('api.scriptures.import');
+    });
+
+    Route::fallback(function(){
+        return response()->json([
+            'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
     });
 });
