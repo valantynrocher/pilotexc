@@ -230,7 +230,7 @@ return [
                 [
                     'text' => 'Exercices comptables',
                     'icon'    => 'far fa-calendar-alt',
-                    'url'  => '#',
+                    'url'  => 'parametres/exercices-comptables',
                 ],
                 [
                     'text' => 'Plans de comptes',

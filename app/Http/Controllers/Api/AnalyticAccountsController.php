@@ -12,7 +12,7 @@ class AnalyticAccountsController extends Controller
     /**
     * Display a listing of analytic accounts.
     *
-    * @return \Illuminate\Http\Response
+    * @return JSON
     */
     public function index()
     {

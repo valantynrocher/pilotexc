@@ -1,4 +1,4 @@
-let url = "/api/analyticAccounts"
+const url = "/api/analyticAccounts"
 
 // Datatable init
 let table = $('#analytic-accounts').DataTable( {
@@ -85,21 +85,22 @@ let table = $('#analytic-accounts').DataTable( {
             },
             orderable: false,
             width: "15%"
-        }],
-        language: {
-            "zeroRecords": "Aucun résultat",
-            "info": "Affiche de _START_ à _END_ sur _TOTAL_ lignes",
-            "infoEmpty": "",
-            "emptyTable": "Aucune donnée à afficher. Importez d'abord votre plan de compte",
-            "infoFiltered": "(Filtré par _MAX_ total entrées)",
-            "decimal": ",",
-            "thousands": " "
-        },
-        scrollY: 300,
-        scrollCollapse: true,
-        order: [[1, 'asc']],
-        paging: false,
-    })
+        }
+    ],
+    language: {
+        "zeroRecords": "Aucun résultat",
+        "info": "Affiche de _START_ à _END_ sur _TOTAL_ lignes",
+        "infoEmpty": "",
+        "emptyTable": "Aucune donnée à afficher. Importez d'abord votre plan de compte",
+        "infoFiltered": "(Filtré par _MAX_ total entrées)",
+        "decimal": ",",
+        "thousands": " "
+    },
+    scrollY: 300,
+    scrollCollapse: true,
+    order: [[1, 'asc']],
+    paging: false,
+})
 
 // reload data in the table
 $('#reloadAccounts').click(function(e) {

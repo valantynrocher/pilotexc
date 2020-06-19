@@ -991,7 +991,7 @@ $('#editModal').on('hide.bs.modal', function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/valou/Documents/DEV-WEB/PROJETS-LARAVEL/Pilotexc2/resources/js/parameters/accounts-analytic.js */"./resources/js/parameters/accounts-analytic.js");
+module.exports = __webpack_require__(/*! /Users/valou/Documents/DEV-WEB/PROJETS-LARAVEL/Pilotexc-lar/resources/js/parameters/accounts-analytic.js */"./resources/js/parameters/accounts-analytic.js");
 
 
 /***/ })

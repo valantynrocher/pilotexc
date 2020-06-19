@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class Cerfa1Controller extends Controller
 {
-     /**
+    /**
      * Get a list of Cerfa1 Groups
      */
     public function groups()
