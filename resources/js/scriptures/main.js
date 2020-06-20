@@ -95,7 +95,7 @@ function format(d) {
 // Add event listener for opening and closing details
 $('#scriptures tbody').on('click', 'td.details-control', function(e) {
     var tr = $(this).closest('tr');
-    var row = table.row( tr );
+    var row = table.row(tr);
     $(e.currentTarget).find('.toggleChildRow').toggleClass('fa-plus-circle').toggleClass('fa-minus-circle')
 
     if (row.child.isShown()) {
