@@ -16,4 +16,5 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/parameters/accounts-analytic.js', 'public/js/parameters')
     .js('resources/js/parameters/fiscal-years.js', 'public/js/parameters')
     .js('resources/js/scriptures/scriptures.js', 'public/js/scriptures')
+    .js('resources/js/reports/reports.js', 'public/js/dashboard')
     .sass('resources/sass/app.scss', 'public/css');

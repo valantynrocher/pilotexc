@@ -75,4 +75,16 @@ class FiscalYearsController extends Controller
         $data = FiscalYear::where('status', 'En cours')->get();
         return $data->toJson();
     }
+
+    /**
+    * Get last 5 exercises
+    */
+    public function getLastFive()
+    {
+        $data = FiscalYear::orderBy('year_start', 'asc')
+        ->take(5)
+        ->get();
+
+        return $data->toJson();
+    }
 }
