@@ -230,13 +230,24 @@ $('#reloadAccounts').click(function (e) {
 $('#importModal').on('show.bs.modal', function () {
   var modal = $(this);
   var selectFiscalYear = modal.find('#fiscalYear');
+  var scripturesInfo = modal.find('#checkScripturesInfo');
+  var formStep2 = modal.find('#step2');
+  var formStep3 = modal.find('#step3');
+  var inputFile = modal.find('#scripturesImport');
+  var inputAmountCheck = modal.find('#amountCheck');
+  var amountCheckBtn = modal.find('#amountCheckBtn');
+  var amountCheckInfo = modal.find('#amountCheckInfo');
   var submitBtn = modal.find('#submitImport'); // Get fiscal year options
 
   $.ajax({
     type: 'GET',
     url: "/api/fiscalYears/inProgress",
     dataType: 'JSON',
-    success: success,
+    success: function success(response) {
+      response.forEach(function (fiscalYear) {
+        selectFiscalYear.append("<option value=\"".concat(fiscalYear.id, "\">").concat(fiscalYear.name, "</option>"));
+      });
+    },
     error: function (_error) {
       function error() {
         return _error.apply(this, arguments);
@@ -250,50 +261,147 @@ $('#importModal').on('show.bs.modal', function () {
     }(function () {
       console.log(error.responseText.message);
     })
-  });
+  }); // Listener for fiscal year change to get number of existing scriptures
 
-  function success(response) {
-    response.forEach(function (fiscalYear) {
-      selectFiscalYear.append("<option value=\"".concat(fiscalYear.id, "\">").concat(fiscalYear.name, "</option>"));
-    });
-  } // Submit form
+  selectFiscalYear.on('change', function () {
+    var fiscalYearId = $(this).val();
 
+    if (fiscalYearId > 0) {
+      var success = function success(response) {
+        scripturesInfo.html("Il y a actuellement <strong>".concat(response.count, "</strong> \xE9criture(s) pour cet exercice."));
+        formStep2.removeClass('d-none');
+      };
 
-  $('#addFiscalYearForm').on('submit', function (e) {
+      $.ajax({
+        type: "GET",
+        url: "/api/scriptures/countExistingScriptures/".concat(fiscalYearId),
+        beforeSend: function beforeSend() {
+          scripturesInfo.html("<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span> Calcul en cours...").removeClass('d-none');
+        },
+        success: success,
+        error: function (_error2) {
+          function error(_x) {
+            return _error2.apply(this, arguments);
+          }
+
+          error.toString = function () {
+            return _error2.toString();
+          };
+
+          return error;
+        }(function (error) {
+          console.log(error);
+          scripturesInfo.html('Erreur');
+          formStep2.addClass('d-none');
+        })
+      });
+    } else {
+      scripturesInfo.addClass('d-none');
+      formStep2.addClass('d-none');
+      inputFile.val('');
+      formStep3.addClass('d-none');
+      inputAmountCheck.val('');
+    }
+  }); // Listener for file input
+
+  inputFile.on('change', function () {
+    var inputValue = $(this).val();
+
+    if (inputValue) {
+      formStep3.removeClass('d-none');
+    } else {
+      formStep3.addClass('d-none');
+    }
+  }); // Listener for check amount change
+
+  inputAmountCheck.on('change', function () {
+    var amountToCheck = $(this).val();
+
+    if (amountToCheck > 0) {
+      amountCheckBtn.removeAttr('disabled');
+    } else {
+      amountCheckBtn.attr('disabled', 'disabled');
+    }
+  }); // listener for checking amount button
+
+  amountCheckBtn.on('click', function (e) {
     e.preventDefault();
-    var formData = new FormData($(this)[0]);
+    amountCheckInfo.empty().removeClass('alert-success alert-danger').addClass('d-none');
+    var formData = new FormData($('#importScriptures')[0]);
     $.ajax({
       type: "POST",
-      url: "/api/scriptures/import",
+      url: "/api/scriptures/checkImportAmount",
       data: formData,
       contentType: false,
       processData: false,
       cache: false,
       beforeSend: function beforeSend() {
+        amountCheckBtn.empty().html("<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span> Patientez...");
+      },
+      success: success,
+      error: function (_error3) {
+        function error(_x2) {
+          return _error3.apply(this, arguments);
+        }
+
+        error.toString = function () {
+          return _error3.toString();
+        };
+
+        return error;
+      }(function (error) {
+        alert('Une erreur est survenue.');
+        console.log(error);
+        amountCheckBtn.empty().html('Vérifier');
+      })
+    });
+
+    function success(response) {
+      amountCheckInfo.removeClass('d-none').html(response.message);
+
+      if (response.validate) {
+        amountCheckBtn.empty().html("<i class=\"fas fa-check-circle\"></i>").attr('disabled', 'disabled');
+        submitBtn.removeAttr('disabled');
+        amountCheckInfo.addClass('alert-success');
+      } else {
+        amountCheckBtn.empty().html('Vérifier');
+        amountCheckInfo.addClass('alert-danger');
+      }
+    }
+  }); // Submit form
+
+  $('#importScriptures').on('submit', function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "/api/scriptures/import",
+      data: $(this).serialize(),
+      beforeSend: function beforeSend() {
         submitBtn.empty().html("<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span> Patientez...");
       },
       success: function success() {
-        submitBtn.empty().removeClass('btn-primary').addClass('btn-success').html("<i class=\"fas fa-check-circle\"></i> R\xE9ussi !");
+        submitBtn.empty().removeClass('btn-primary').addClass('btn-success').html("<i class=\"fas fa-check-circle\"></i> Ok !");
         setTimeout(function () {
           modal.modal('hide');
           location.reload();
         }, 1000);
       },
-      error: function (_error2) {
-        function error(_x) {
-          return _error2.apply(this, arguments);
+      error: function (_error4) {
+        function error(_x3) {
+          return _error4.apply(this, arguments);
         }
 
         error.toString = function () {
-          return _error2.toString();
+          return _error4.toString();
         };
 
         return error;
       }(function (error) {
         console.log(error);
         submitBtn.empty().removeClass('btn-primary').addClass('btn-danger').html("<i class=\"fas fa-times-circle\"></i> \xC9chec !");
+        alert("Une erreur est survenue pendant l'import. Si l'erreur persiste, contactez le support Pilotexc.");
         setTimeout(function () {
-          alert("Une erreur est survenue pendant l'import. Si l'erreur persiste, contactez le support Pilotexc.");
+          modal.modal('hide');
         }, 1000);
       })
     });
@@ -301,6 +409,16 @@ $('#importModal').on('show.bs.modal', function () {
 });
 $('#importModal').on('hide.bs.modal', function () {
   $(this).find('#fiscalYear').find('option').remove().end().append("<option value=\"0\">S\xE9lectionnez un exercice comptable...</option>");
+  $(this).find('#scripturesImport').val('');
+  $(this).find('#amountCheck').val('');
+  $(this).find('#amountCheckBtn').removeAttr('disabled').empty().html('Vérifier');
+  $(this).find('#checkScripturesInfo').empty().addClass('d-none');
+  $(this).find('#step2, #step3').addClass('d-none');
+  $(this).find('#amountCheckInfo').empty().removeClass('alert-success', 'alert-danger').addClass('d-none');
+  $.ajax({
+    type: "GET",
+    url: "/api/scriptures/truncateTempScriptures"
+  });
 });
 
 /***/ }),

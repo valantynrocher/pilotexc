@@ -104,11 +104,14 @@ Route::group(['prefix' => 'api'], function () {
     // endpoint: /api/scriptures/...
     Route::group(['prefix' => 'scriptures'], function () {
         Route::get('', 'Api\\ScripturesController@index')->name('api.scriptures');
+        Route::get('countExistingScriptures/{fiscalYear}', 'Api\\ScripturesController@countExistingScriptures')->name('api.scriptures.countExistingScriptures');
+        Route::post('checkImportAmount', 'Api\\ScripturesController@checkImportAmount')->name('api.scriptures.checkImportAmount');
+        Route::get('truncateTempScriptures', 'Api\\ScripturesController@truncateTempScriptures')->name('api.scriptures.truncateTempScriptures');
         Route::post('import', 'Api\\ScripturesController@import')->name('api.scriptures.import');
     });
 
     Route::fallback(function(){
         return response()->json([
-            'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
+            'message' => 'Page introuvable. Si l\'erreur persiste, contactez le support Pilotexc.'], 404);
     });
 });

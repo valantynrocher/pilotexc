@@ -20,3 +20,7 @@ td.details-control {
   cursor: pointer;
 }
 
+#importScriptures fieldset:not(:first-of-type) {
+  display: none;
+}
+

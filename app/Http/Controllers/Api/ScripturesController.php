@@ -16,9 +16,9 @@ use Maatwebsite\Excel\Facades\Excel;
 class ScripturesController extends Controller
 {
     /**
-    * Get resources for the scriptures page check
+    * Get enriched data with scriptures and results by fiscal year and by structure in real time
     *
-    * @return \Illuminate\Contracts\Support\Renderable
+    * @return JSON
     */
     public function index()
     {
@@ -32,11 +32,116 @@ class ScripturesController extends Controller
         return collect($exercises)->toJson();
     }
 
+
+    /**
+    * This function count number of scriptures for a given fiscal year
+    *
+    * @param Integer $fiscalYearId
+    * @return JSON
+    */
+    public function countExistingScriptures($fiscalYearId)
+    {
+        $check = Scripture::all()->where('fiscal_year_id', $fiscalYearId);
+        return response()->json([
+            'count' => count($check)
+        ]);
+    }
+
+
+    /**
+    * This function is used to check the result amount of current import with the user input
+    *
+    * @param Request
+    * @return JSON
+    */
+    public function checkImportAmount(Request $request)
+    {
+        if($request->hasFile('scriptures')) {
+            try {
+                // First truncate import table
+                $this->truncateTempScriptures();
+
+                // Launch Excel import in import scriptures table
+                Excel::import(new ScripturesImport, $this->storeImportedFile($request));
+
+                // filtered scriptures to get only those for this exercise
+                $filtered = $this->filterTempScripturesByExercise($request->input('fiscal_year_id'));
+                // Calculate $result
+                $result = ($filtered->sum('credit_amount')) - ($filtered->sum('debit_amount'));
+                // Parse result format
+                $result = number_format($result, 0, ',', '');
+
+                if ($request->input('amount_check') == $result) {
+                    return response()->json([
+                        'validate' => true,
+                        'message' => 'La validation est correcte. Vous pouvez finaliser votre import.'
+                    ]);
+                } else {
+                    $this->truncateTempScriptures();
+                    return response()->json([
+                        'validate' => false,
+                        'message' => 'La validation a échouée. Saisissez un autre montant.'
+                    ]);
+                }
+
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        } else {
+            return response()->json([
+                'message' => 'Aucun fichier à importer.',
+                'code' => 419
+            ]);
+        }
+    }
+
+
+    /**
+    * This function is used to finalize the scriptures import
+    *
+    * @param Request
+    * @return JSON
+    */
+    public function import(Request $request)
+    {
+        try {
+            // Truncate existing scripture for current exercise on final scriptures table
+            $this->deleteScripturesForExercise($request->input('fiscal_year_id'));
+
+            // Filtered scriptures to get only those for selected exercise
+            $filtered = $this->filterTempScripturesByExercise($request->input('fiscal_year_id'));
+
+            // Save each filtered scriptures in the final scriptures table
+            $this->saveFinalScriptures($filtered, $request->input('fiscal_year_id'));
+
+            // truncate temporary import_scriptures table
+            $this->truncateTempScriptures();
+
+            return response()->json([
+                'message' => 'Vots écritures ont bien été importées.'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Une erreur est survenue pendant l\'import. Veuillez essayer à nouvea. Si l\'erreur persiste, contactez le support Pilotexc.',
+                'error' => $th
+            ]);
+        }
+    }
+
+    /**
+    * This function is used to truncate the impor scriptures table, wich is a temporary table
+    *
+    * @return void
+    */
+    public function truncateTempScriptures() {
+        DB::table('import_scriptures')->truncate();
+    }
+
     /**
     * This function is used to calculate global result by exercise and
     * by structure
     *
-    * @param $exercise : Array, Collection of all Fiscal Years with "Clôturé" status
+    * @param Model $fiscalYear
     * @return array $exercise
     */
     protected function getResultsByExercise($fiscalYear)
@@ -79,70 +184,56 @@ class ScripturesController extends Controller
     }
 
 
-    public function import(Request $request)
+    /**
+    * This function is used to filter the import scriptures table
+    * to get only scriptures for given fiscal year
+    *
+    * @param Integer $fiscalYear
+    * @return Collection
+    */
+    protected function filterTempScripturesByExercise($fiscalYearId)
     {
-        if($request->hasFile('scriptures')) {
-            try {
-                // set Start and End Date for selected exercise
-                $fiscalYear = FiscalYear::find($request->input('fiscal_year_id'));
-                $startExercise = "$fiscalYear->year_start-$fiscalYear->month_start-01";
-                $endExercise = "$fiscalYear->year_end-$fiscalYear->month_end-31";
+        // Set Start and End Date for current exercise
+        $fiscalYear = FiscalYear::find($fiscalYearId);
+        $startExercise = "$fiscalYear->year_start-$fiscalYear->month_start-01";
+        $endExercise = "$fiscalYear->year_end-$fiscalYear->month_end-31";
 
-                // Check if scriptures already exist for this exercise
-                $check = Scripture::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
-
-                // get, rename and store importation file
-                $path = $this->storeImportedFile($request);
-
-                // launch Excel import in temporary table
-                Excel::import(new ScripturesImport, $path);
-
-                // filtered scriptures to get only the selected exercise
-                $filtered = ImportScriptures::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
-
-                // save each filtered scriptures in the final 'scriptures' table
-                $this->saveFinalScriptures($filtered, $fiscalYear);
-
-                // truncate temporary 'import_scriptures' table
-                DB::table('import_scriptures')->truncate();
-
-                // return redirect()->route('scriptures.index')->with('success', 'Votre import \'est bien passé.');
-                return response()->json([
-                    'message' => 'Votre import s\'est bien passé.',
-                    'code' => 204
-                ]);
-            } catch (\Throwable $th) {
-                throw $th;
-                // return response()->json([
-                //     'message' => 'Une erreur est survenue pendant l\'import.',
-                //     'error' => $th
-                // ]);
-            }
-        } else {
-            return response()->json([
-                'message' => 'Aucun fichier à importer.',
-                'code' => 419
-            ]);
-        }
+        return ImportScriptures::all()->whereBetween('date_entry', [Carbon::parse($startExercise), Carbon::parse($endExercise)]);
     }
 
-    protected function storeImportedFile($request)
+
+    /**
+    * This function is used to store the upload file when user
+    * is importing scriptures
+    *
+    * @param Request $request
+    * @return String $path
+    */
+    protected function storeImportedFile(Request $request)
     {
         $file = $request->file('scriptures');
-        $file = $request->scriptures;
         $extension = $file->getClientOriginalExtension();
         $currentTime = Carbon::parse(Carbon::now())->format('d-m-Y_H-i');
-        $fileNameToStore = 'import_'. $currentTime .'_scriptures_' . time() . '.' . $extension;
+        $fileNameToStore = 'import_'. $currentTime .'_scriptures' . '.' . $extension;
         $path = $file->storeAs('public/scriptures', $fileNameToStore);
 
         return $path;
     }
 
-    protected function saveFinalScriptures($filtered, $fiscalYear)
+
+    /**
+    * This function is used to save scriptures from import table to
+    * final table, with some enriched data
+    *
+    * @param Collection $filtered
+    * @param Integer $fiscalYearId
+    * @return JSON
+    */
+    protected function saveFinalScriptures($filtered, $fiscalYearId)
     {
         foreach($filtered as $item) {
             $scripture = new Scripture();
-            $scripture->fiscal_year_id = $fiscalYear->id;
+            $scripture->fiscal_year_id = $fiscalYearId;
             $scripture->analytic_account_id = $item->analytic_account;
             $scripture->general_account_id = $item->general_account;
             $scripture->date_entry = $item->date_entry;
@@ -156,5 +247,20 @@ class ScripturesController extends Controller
 
             $scripture->save();
         }
+        return 204;
+    }
+
+
+    /**
+    * This function is used to delete scriptures from table
+    * before importing new ones for a given fiscal year
+    *
+    * @param Collection $filtered
+    * @param Integer $fiscalYearId
+    * @return JSON
+    */
+    protected function deleteScripturesForExercise($fiscalYearId)
+    {
+        DB::table('scriptures')->where('fiscal_year_id', $fiscalYearId)->delete();
     }
 }

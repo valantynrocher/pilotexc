@@ -19,3 +19,7 @@ td.details-control {
     font-size: 18px;
     cursor: pointer;
 }
+
+#importScriptures fieldset:not(:first-of-type) {
+    display: none;
+}
