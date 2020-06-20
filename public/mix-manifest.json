@@ -1,6 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/js/dashboard/reports.js": "/js/dashboard/reports.js",
     "/js/parameters/accounts-analytic.js": "/js/parameters/accounts-analytic.js",
     "/js/parameters/accounts-general.js": "/js/parameters/accounts-general.js",
     "/js/parameters/fiscal-years.js": "/js/parameters/fiscal-years.js",

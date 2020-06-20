@@ -98,6 +98,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('edit/{id}', 'Api\\FiscalYearsController@edit')->name('api.fiscalYears.edit');
         Route::patch('update/{id}', 'Api\\FiscalYearsController@update')->name('api.fiscalYears.update');
         Route::get('inProgress', 'Api\\FiscalYearsController@getInProgress')->name('api.fiscalYears.inProgress');
+        Route::get('getLastFive', 'Api\\FiscalYearsController@getLastFive')->name('api.fiscalYears.getLastFive');
     });
 
     // Api\\ScripturesController
@@ -108,6 +109,13 @@ Route::group(['prefix' => 'api'], function () {
         Route::post('checkImportAmount', 'Api\\ScripturesController@checkImportAmount')->name('api.scriptures.checkImportAmount');
         Route::get('truncateTempScriptures', 'Api\\ScripturesController@truncateTempScriptures')->name('api.scriptures.truncateTempScriptures');
         Route::post('import', 'Api\\ScripturesController@import')->name('api.scriptures.import');
+    });
+
+    // Api\\ReportsController
+    // endpoint: /api/reports/...
+    Route::group(['prefix' => 'reports'], function () {
+        Route::get('analyticalEvolutionChart/sector/{sector}' , 'Api\\ReportsController@analyticalEvolutionChart')->name('api.reports.analyticalEvolutionChart');
+        Route::get('productsDivisionChart/fiscalYear/{fiscalYear}' , 'Api\\ReportsController@productsDivisionChart')->name('api.reports.productsDivisionChart');
     });
 
     Route::fallback(function(){

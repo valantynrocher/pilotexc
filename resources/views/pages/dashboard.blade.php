@@ -7,10 +7,14 @@
 @stop
 
 @section('content')
-<p>Bienvenue sur Pilotexc.</p>
+    <div class="row">
+        @include('components.reports.analytic-evol-charges-product')
+        @include('components.reports.products-division-sector')
+    </div>
 @stop
 
 
 @section('js')
-<script> console.log('Hi!'); </script>
+<script src="{{ asset('/vendor/chart.js/Chart.js') }}"></script>
+<script src="{{ asset('/js/dashboard/reports.js') }}"></script>
 @stop
