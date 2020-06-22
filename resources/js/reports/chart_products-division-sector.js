@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    let spinner = $('#spinner2')
     let ctx = $('#productsDivisionChart')
+    let spinner = ctx.siblings()
     let filter = $('#productsDivisionChartFilter')
     let chart
     let filterDefaultValue

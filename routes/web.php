@@ -117,6 +117,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'reports'], function () {
         Route::get('analyticalEvolutionChart/sector/{sector}', 'Api\\ReportsController@analyticalEvolutionChart')->name('api.reports.analyticalEvolutionChart');
         Route::get('productsDivisionChart/fiscalYear/{fiscalYear}', 'Api\\ReportsController@productsDivisionChart')->name('api.reports.productsDivisionChart');
+        Route::get('chargesDivisionChart/fiscalYear/{fiscalYear}', 'Api\\ReportsController@chargesDivisionChart')->name('api.reports.chargesDivisionChart');
         Route::get('analyticalSectorDivisionChart/fiscalYear/{fiscalYear}', 'Api\\ReportsController@analyticalSectorDivisionChart')->name('api.reports.analyticalSectorDivisionChart');
     });
 

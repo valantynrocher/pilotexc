@@ -11,7 +11,7 @@
         @include('components.reports.analytic-evol-charges-product')
         @include('components.reports.analytic-sector-division')
         @include('components.reports.products-division-sector')
-
+        @include('components.reports.charges-division-sector')
     </div>
 @stop
 

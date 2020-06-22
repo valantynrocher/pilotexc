@@ -153,6 +153,49 @@ class ReportsController extends Controller
     }
 
     /**
+     * Build chart Products sectors division with exercise filter
+     * @param Integer $fiscalYearId
+     */
+    public function chargesDivisionChart($fiscalYearId)
+    {
+        // get the selected exercise
+        $exercise = FiscalYear::find($fiscalYearId);
+
+        // init charts datas arrays
+        $results = [];
+
+        // datas querying
+        foreach($this->sectors as $sector) {
+            $sumResults = 0;
+            foreach($sector->services as $service) {
+                $scriptures =  $service->scriptures->where('fiscal_year_id', $exercise->id);
+                $sumResults += ($scriptures->whereBetween('general_account_id', [600000, 699999])->sum('result_amount'))/ $this->divider;
+            }
+            array_push($results, round($sumResults, 0));
+        }
+
+        return response()->json([
+            'labels' => $this->sectors->pluck('name')->all(),
+            'datasets' => [
+                [
+                    'data' => $results,
+                    'backgroundColor' => [
+                        '#00AFF0',
+                        '#00c300',
+                        '#df2029',
+                        '#FFFC00',
+                        '#410093',
+                        '#0077b5',
+                        '#ea4c89',
+                        '#f57d00',
+                        '#34465d'
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    /**
      * Build chart Analytical sector evolution with exercise filter
      * @param Integer $fiscalYearId
      */
