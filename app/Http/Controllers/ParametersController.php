@@ -23,10 +23,10 @@ class ParametersController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        return view('pages.parameters.generals');
-    }
+    // public function index()
+    // {
+    //     return view('pages.parameters.generals');
+    // }
 
     /**
      * return the view for fiscal years
