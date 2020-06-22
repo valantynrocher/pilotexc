@@ -23,8 +23,8 @@ class ReportsController extends Controller
     }
 
     /**
-     * Build chart Analytical evolution
-     * @param Integer : id of selected sector
+     * Build chart Analytical evolution with sector filter
+     * @param Integer $sectorId
      */
     public function analyticalEvolutionChart($sectorId)
     {
@@ -35,7 +35,7 @@ class ReportsController extends Controller
 
         $exercises = FiscalYear::orderBy('year_start', 'asc')->take(5)->get();
 
-        // get the selected sector
+        // get the selected sector datas
         if ($sectorId > 0) {
             $sector = $this->sectors->find($sectorId);
 
@@ -110,8 +110,8 @@ class ReportsController extends Controller
 
 
     /**
-     * Build chart Products sectors division
-     * @param int : id of selected fiscal year
+     * Build chart Products sectors division with exercise filter
+     * @param Integer $fiscalYearId
      */
     public function productsDivisionChart($fiscalYearId)
     {
@@ -147,6 +147,65 @@ class ReportsController extends Controller
                         '#f57d00',
                         '#34465d'
                     ]
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Build chart Analytical sector evolution with exercise filter
+     * @param Integer $fiscalYearId
+     */
+    public function analyticalSectorDivisionChart($fiscalYearId)
+    {
+        // init charts datas arrays
+        $charges = [];
+        $produits = [];
+        $results = [];
+
+        // get the selected exercise
+        $exercise = FiscalYear::find($fiscalYearId);
+
+        foreach($this->sectors as $sector) {
+            foreach($sector->services as $service) {
+                $sumCharges = 0;
+                $sumProduits = 0;
+                $sumResults = 0;
+
+                foreach($sector->services as $service) {
+                    $scriptures =  $service->scriptures->where('fiscal_year_id', $exercise->id);
+                    $sumCharges += ($scriptures->whereBetween('general_account_id', [600000, 699999])->sum('result_amount')) / $this->divider;
+                    $sumProduits += ($scriptures->whereBetween('general_account_id', [700000, 799999])->sum('result_amount')) / $this->divider;
+                    $sumResults += ($scriptures->sum('result_amount')) / $this->divider;
+                }
+
+            }
+            array_push($charges, round($sumCharges, 0));
+            array_push($produits, round($sumProduits, 0));
+            array_push($results, round($sumResults, 0));
+        }
+
+
+        return response()->json([
+            'labels' => $this->sectors->pluck('name')->all(),
+            'datasets' => [
+                [
+                    'label' => 'Charges',
+                    'data' => $charges,
+                    'backgroundColor' => '#df2029'
+                ],
+                [
+                    'label' => 'Produits',
+                    'data' => $produits,
+                    'backgroundColor' => '#00c300'
+                ],
+                [
+                    'type' => 'line',
+                    'label' => 'Résultats',
+                    'data' => $results,
+                    'borderColor' => '#00AFF0',
+                    'fill' => false,
+                    'borderWidth' => 2
                 ]
             ]
         ]);

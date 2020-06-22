@@ -2,7 +2,7 @@ $(document).ready(function() {
     let spinner = $('#spinner1')
     let ctx = $('#analyticalEvolutionChart')
     let filter = $('#analyticalEvolutionChartFilter')
-    let barChart
+    let chart
 
     // Get Sector Options (filter)
     $.ajax({
@@ -35,11 +35,11 @@ $(document).ready(function() {
                 spinner.hide()
                 ctx.show()
                 // if the chart is not undefined then destory the old one so we can create a new one later
-                if (barChart) {
-                    barChart.destroy();
+                if (chart) {
+                    chart.destroy();
                 }
                 // Create chart
-                barChart = new Chart(ctx, {
+                chart = new Chart(ctx, {
                     type: 'bar',
                     options: {
                         responsive: true,
@@ -54,12 +54,12 @@ $(document).ready(function() {
                 })
 
                 // Fill chart with response
-                barChart.data = {
+                chart.data = {
                     labels: response.labels,
                     datasets: response.datasets
                 }
 
-                barChart.update()
+                chart.update()
             },
             error:function(error) {console.log(error)}
         })

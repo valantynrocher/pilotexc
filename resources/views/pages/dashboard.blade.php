@@ -9,7 +9,9 @@
 @section('content')
     <div class="row">
         @include('components.reports.analytic-evol-charges-product')
+        @include('components.reports.analytic-sector-division')
         @include('components.reports.products-division-sector')
+
     </div>
 @stop
 

@@ -115,8 +115,9 @@ Route::group(['prefix' => 'api'], function () {
     // Api\\ReportsController
     // endpoint: /api/reports/...
     Route::group(['prefix' => 'reports'], function () {
-        Route::get('analyticalEvolutionChart/sector/{sector}' , 'Api\\ReportsController@analyticalEvolutionChart')->name('api.reports.analyticalEvolutionChart');
-        Route::get('productsDivisionChart/fiscalYear/{fiscalYear}' , 'Api\\ReportsController@productsDivisionChart')->name('api.reports.productsDivisionChart');
+        Route::get('analyticalEvolutionChart/sector/{sector}', 'Api\\ReportsController@analyticalEvolutionChart')->name('api.reports.analyticalEvolutionChart');
+        Route::get('productsDivisionChart/fiscalYear/{fiscalYear}', 'Api\\ReportsController@productsDivisionChart')->name('api.reports.productsDivisionChart');
+        Route::get('analyticalSectorDivisionChart/fiscalYear/{fiscalYear}', 'Api\\ReportsController@analyticalSectorDivisionChart')->name('api.reports.analyticalSectorDivisionChart');
     });
 
     Route::fallback(function(){
