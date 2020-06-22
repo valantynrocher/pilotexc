@@ -97,7 +97,7 @@ $(document).ready(function () {
   var spinner = $('#spinner1');
   var ctx = $('#analyticalEvolutionChart');
   var filter = $('#analyticalEvolutionChartFilter');
-  var barChart; // Get Sector Options (filter)
+  var chart; // Get Sector Options (filter)
 
   $.ajax({
     type: 'GET',
@@ -140,12 +140,12 @@ $(document).ready(function () {
         spinner.hide();
         ctx.show(); // if the chart is not undefined then destory the old one so we can create a new one later
 
-        if (barChart) {
-          barChart.destroy();
+        if (chart) {
+          chart.destroy();
         } // Create chart
 
 
-        barChart = new Chart(ctx, {
+        chart = new Chart(ctx, {
           type: 'bar',
           options: {
             responsive: true,
@@ -159,11 +159,11 @@ $(document).ready(function () {
           }
         }); // Fill chart with response
 
-        barChart.data = {
+        chart.data = {
           labels: response.labels,
           datasets: response.datasets
         };
-        barChart.update();
+        chart.update();
       },
       error: function (_error2) {
         function error(_x) {
@@ -187,6 +187,88 @@ $(document).ready(function () {
 
 /***/ }),
 
+/***/ "./resources/js/reports/chart_analytic-sector-division.js":
+/*!****************************************************************!*\
+  !*** ./resources/js/reports/chart_analytic-sector-division.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(document).ready(function () {
+  var spinner = $('#spinner3');
+  var ctx = $('#analyticSectorDivision');
+  var filter = $('#analyticSectorDivisionFilter');
+  var chart;
+  var filterDefaultValue; // Get Sector Options (filter)
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/fiscalYears/getLastFive',
+    success: function success(response) {
+      response.forEach(function (fiscalYear) {
+        filter.append("<option value=".concat(fiscalYear.id, ">").concat(fiscalYear.name, "</option>"));
+      }); // Get most recent exercise
+
+      filterDefaultValue = filter.find('option:first-child').val(); // Initialize chart data when filter options are loaded with most recent exercise on first loading
+
+      renderChart(filterDefaultValue);
+    },
+    error: function error(_error) {
+      console.log(_error);
+    }
+  }); // Listener on sector (filter) change
+
+  filter.on('change', function () {
+    var fiscalYearId = $(this).val();
+    renderChart(fiscalYearId);
+  }); // Render Chart JS element
+
+  var renderChart = function renderChart(fiscalYearId) {
+    $.ajax({
+      type: 'GET',
+      url: "/api/reports/analyticalSectorDivisionChart/fiscalYear/".concat(fiscalYearId),
+      dataType: 'JSON',
+      beforeSend: function beforeSend() {
+        spinner.show();
+      },
+      success: function success(response) {
+        spinner.hide();
+        ctx.show(); // if the chart is not undefined then destory the old one so we can create a new one later
+
+        if (chart) {
+          chart.destroy();
+        } // Create chart
+
+
+        chart = new Chart(ctx, {
+          type: 'bar',
+          options: {
+            responsive: true,
+            title: {
+              display: false
+            },
+            tooltips: {
+              mode: 'index',
+              intersect: true
+            }
+          }
+        }); // Fill chart with response
+
+        chart.data = {
+          labels: response.labels,
+          datasets: response.datasets
+        };
+        chart.update();
+      },
+      error: function error(_error2) {
+        console.log(_error2);
+      }
+    });
+  };
+});
+
+/***/ }),
+
 /***/ "./resources/js/reports/chart_products-division-sector.js":
 /*!****************************************************************!*\
   !*** ./resources/js/reports/chart_products-division-sector.js ***!
@@ -198,7 +280,7 @@ $(document).ready(function () {
   var spinner = $('#spinner2');
   var ctx = $('#productsDivisionChart');
   var filter = $('#productsDivisionChartFilter');
-  var pieChart;
+  var chart;
   var filterDefaultValue; // Get Sector Options (filter)
 
   $.ajax({
@@ -207,8 +289,9 @@ $(document).ready(function () {
     success: function success(response) {
       response.forEach(function (fiscalYear) {
         filter.append("<option value=".concat(fiscalYear.id, ">").concat(fiscalYear.name, "</option>"));
-      });
-      filterDefaultValue = filter.find('option:first-child').val(); // Initialize chart data when filter options are loaded
+      }); // Get most recent exercise
+
+      filterDefaultValue = filter.find('option:first-child').val(); // Initialize chart data when filter options are loaded with most recent exercise on first loading
 
       renderChart(filterDefaultValue);
     },
@@ -234,12 +317,12 @@ $(document).ready(function () {
         spinner.hide();
         ctx.show(); // if the chart is not undefined then destory the old one so we can create a new one later
 
-        if (pieChart) {
-          pieChart.destroy();
+        if (chart) {
+          chart.destroy();
         } // Create chart
 
 
-        pieChart = new Chart(ctx, {
+        chart = new Chart(ctx, {
           type: 'pie',
           options: {
             responsive: true,
@@ -253,11 +336,11 @@ $(document).ready(function () {
           }
         }); // Fill chart with response
 
-        pieChart.data = {
+        chart.data = {
           labels: response.labels,
           datasets: response.datasets
         };
-        pieChart.update();
+        chart.update();
       },
       error: function error(_error2) {
         console.log(_error2);
@@ -278,6 +361,8 @@ $(document).ready(function () {
 __webpack_require__(/*! ./chart_analytic-evol-charges-product */ "./resources/js/reports/chart_analytic-evol-charges-product.js");
 
 __webpack_require__(/*! ./chart_products-division-sector */ "./resources/js/reports/chart_products-division-sector.js");
+
+__webpack_require__(/*! ./chart_analytic-sector-division */ "./resources/js/reports/chart_analytic-sector-division.js");
 
 /***/ }),
 

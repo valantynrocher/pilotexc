@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    let spinner = $('#spinner2')
-    let ctx = $('#productsDivisionChart')
-    let filter = $('#productsDivisionChartFilter')
+    let spinner = $('#spinner3')
+    let ctx = $('#analyticSectorDivision')
+    let filter = $('#analyticSectorDivisionFilter')
     let chart
     let filterDefaultValue
 
@@ -33,7 +33,7 @@ $(document).ready(function() {
     let renderChart = function(fiscalYearId) {
         $.ajax({
             type: 'GET',
-            url: `/api/reports/productsDivisionChart/fiscalYear/${fiscalYearId}`,
+            url: `/api/reports/analyticalSectorDivisionChart/fiscalYear/${fiscalYearId}`,
             dataType: 'JSON',
             beforeSend: function() {
                 spinner.show()
@@ -47,15 +47,15 @@ $(document).ready(function() {
                 }
                 // Create chart
                 chart = new Chart(ctx, {
-                    type: 'pie',
+                    type: 'bar',
                     options: {
                         responsive: true,
                         title: {
                             display: false
                         },
-                        animation: {
-                            animateScale: true,
-                            animateRotate: true
+                        tooltips: {
+                            mode: 'index',
+                            intersect: true
                         }
                     }
                 })

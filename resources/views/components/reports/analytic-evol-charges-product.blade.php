@@ -2,7 +2,7 @@
     <!-- AREA CHART 1 -->
     <div class="card card-info card-outline">
         <div class="card-header">
-            <h3 class="card-title">Évolution analytique des charges et produits en k€</h3>
+            <h3 class="card-title">Évolution charges/produits/résultat par secteur en k€</h3>
         </div>
         <div class="card-body" style="display: block;">
             <form method="POST" class="mb-2">
