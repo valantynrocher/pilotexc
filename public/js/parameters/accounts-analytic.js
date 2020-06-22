@@ -680,7 +680,9 @@ $('#deleteModal').on('show.bs.modal', function (event) {
         location.reload();
       },
       error: function error(_error) {
-        console.log(_error.responseText.message);
+        console.log(_error);
+        alert('Suppression impossible. Une ou plusieurs écritures comptables sont liées à ce compte.');
+        modal.modal('hide');
       }
     });
   });
