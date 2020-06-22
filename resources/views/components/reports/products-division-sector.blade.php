@@ -11,15 +11,15 @@
                     <label for="productsDivisionChartFilter" class="col-sm-3 col-form-label">Exercice :</label>
                     <div class="col-sm-9">
                         <select name="exercise" class="form-control exercise-select" id="productsDivisionChartFilter">
-                            {{-- @foreach ($yearsOp as $op) --}}
-                                {{-- <option value="{{$op->id}}">{{$op->name}}</option> --}}
-                            {{-- @endforeach --}}
                         </select>
                     </div>
                 </div>
             </form>
-            <div>
-                <canvas id="productsDivisionChart"></canvas>
+            <div class="chart-container">
+                <div class="spinner-grow text-info" id="spinner2" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <canvas id="productsDivisionChart" width="520px" height="400px" style="padding: 15px"></canvas>
             </div>
         </div>
     </div>

@@ -96,22 +96,57 @@
 $(document).ready(function () {
   var spinner = $('#spinner1');
   var ctx = $('#analyticalEvolutionChart');
-  var sectorId = $(document).find('#analyticalEvolutionChartFilter');
+  var filter = $('#analyticalEvolutionChartFilter');
+  var barChart; // Get Sector Options (filter)
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/sectors/',
+    success: function success(response) {
+      response.forEach(function (sector) {
+        filter.append("<option value=".concat(sector.id, ">").concat(sector.name, "</option>"));
+      });
+    },
+    error: function (_error) {
+      function error() {
+        return _error.apply(this, arguments);
+      }
+
+      error.toString = function () {
+        return _error.toString();
+      };
+
+      return error;
+    }(function () {
+      console.log(error);
+    })
+  }); // Listener on sector (filter) change
+
+  filter.on('change', function () {
+    var sectorId = $(this).val();
+    renderChart(sectorId);
+  }); // Render Chart JS element
 
   var renderChart = function renderChart() {
+    var sectorId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     $.ajax({
       type: 'GET',
       url: "/api/reports/analyticalEvolutionChart/sector/".concat(sectorId),
       dataType: 'JSON',
-      beforeSend: function beforeSend() {},
+      beforeSend: function beforeSend() {
+        spinner.show();
+      },
       success: function success(response) {
         spinner.hide();
-        var myChart = new Chart(ctx, {
+        ctx.show(); // if the chart is not undefined then destory the old one so we can create a new one later
+
+        if (barChart) {
+          barChart.destroy();
+        } // Create chart
+
+
+        barChart = new Chart(ctx, {
           type: 'bar',
-          data: {
-            labels: response.labels,
-            datasets: response.datasets
-          },
           options: {
             responsive: true,
             title: {
@@ -122,26 +157,113 @@ $(document).ready(function () {
               intersect: true
             }
           }
-        });
+        }); // Fill chart with response
+
+        barChart.data = {
+          labels: response.labels,
+          datasets: response.datasets
+        };
+        barChart.update();
       },
-      error: function (_error) {
-        function error() {
-          return _error.apply(this, arguments);
+      error: function (_error2) {
+        function error(_x) {
+          return _error2.apply(this, arguments);
         }
 
         error.toString = function () {
-          return _error.toString();
+          return _error2.toString();
         };
 
         return error;
-      }(function () {
+      }(function (error) {
         console.log(error);
       })
     });
-  }; // Initialize chart data
+  }; // Initialize chart data when document is ready
 
 
   renderChart();
+});
+
+/***/ }),
+
+/***/ "./resources/js/reports/chart_products-division-sector.js":
+/*!****************************************************************!*\
+  !*** ./resources/js/reports/chart_products-division-sector.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(document).ready(function () {
+  var spinner = $('#spinner2');
+  var ctx = $('#productsDivisionChart');
+  var filter = $('#productsDivisionChartFilter');
+  var pieChart;
+  var filterDefaultValue; // Get Sector Options (filter)
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/fiscalYears/getLastFive',
+    success: function success(response) {
+      response.forEach(function (fiscalYear) {
+        filter.append("<option value=".concat(fiscalYear.id, ">").concat(fiscalYear.name, "</option>"));
+      });
+      filterDefaultValue = filter.find('option:first-child').val(); // Initialize chart data when filter options are loaded
+
+      renderChart(filterDefaultValue);
+    },
+    error: function error(_error) {
+      console.log(_error);
+    }
+  }); // Listener on sector (filter) change
+
+  filter.on('change', function () {
+    var fiscalYearId = $(this).val();
+    renderChart(fiscalYearId);
+  }); // Render Chart JS element
+
+  var renderChart = function renderChart(fiscalYearId) {
+    $.ajax({
+      type: 'GET',
+      url: "/api/reports/productsDivisionChart/fiscalYear/".concat(fiscalYearId),
+      dataType: 'JSON',
+      beforeSend: function beforeSend() {
+        spinner.show();
+      },
+      success: function success(response) {
+        spinner.hide();
+        ctx.show(); // if the chart is not undefined then destory the old one so we can create a new one later
+
+        if (pieChart) {
+          pieChart.destroy();
+        } // Create chart
+
+
+        pieChart = new Chart(ctx, {
+          type: 'pie',
+          options: {
+            responsive: true,
+            title: {
+              display: false
+            },
+            animation: {
+              animateScale: true,
+              animateRotate: true
+            }
+          }
+        }); // Fill chart with response
+
+        pieChart.data = {
+          labels: response.labels,
+          datasets: response.datasets
+        };
+        pieChart.update();
+      },
+      error: function error(_error2) {
+        console.log(_error2);
+      }
+    });
+  };
 });
 
 /***/ }),
@@ -154,6 +276,8 @@ $(document).ready(function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./chart_analytic-evol-charges-product */ "./resources/js/reports/chart_analytic-evol-charges-product.js");
+
+__webpack_require__(/*! ./chart_products-division-sector */ "./resources/js/reports/chart_products-division-sector.js");
 
 /***/ }),
 

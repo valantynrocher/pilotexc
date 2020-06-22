@@ -1,32 +1,38 @@
 $(document).ready(function() {
-    let spinner = $('#spinner1')
-    let ctx = $('#analyticalEvolutionChart')
-    let filter = $('#analyticalEvolutionChartFilter')
-    let barChart
+    let spinner = $('#spinner2')
+    let ctx = $('#productsDivisionChart')
+    let filter = $('#productsDivisionChartFilter')
+    let pieChart
+    let filterDefaultValue
 
     // Get Sector Options (filter)
     $.ajax({
         type: 'GET',
-        url: '/api/sectors/',
+        url: '/api/fiscalYears/getLastFive',
         success: function(response) {
-            response.forEach(sector => {
-                filter.append(`<option value=${sector.id}>${sector.name}</option>`)
+            response.forEach(fiscalYear => {
+                filter.append(`<option value=${fiscalYear.id}>${fiscalYear.name}</option>`)
             })
+            filterDefaultValue = filter.find('option:first-child').val()
+
+            // Initialize chart data when filter options are loaded
+            renderChart(filterDefaultValue)
         },
-        error:function() {console.log(error)}
+        error:function(error) {console.log(error)}
     })
 
     // Listener on sector (filter) change
     filter.on('change', function() {
-        let sectorId = $(this).val()
-        renderChart(sectorId)
+        let fiscalYearId = $(this).val()
+        renderChart(fiscalYearId)
     })
 
+
     // Render Chart JS element
-    let renderChart = function(sectorId = 0) {
+    let renderChart = function(fiscalYearId) {
         $.ajax({
             type: 'GET',
-            url: `/api/reports/analyticalEvolutionChart/sector/${sectorId}`,
+            url: `/api/reports/productsDivisionChart/fiscalYear/${fiscalYearId}`,
             dataType: 'JSON',
             beforeSend: function() {
                 spinner.show()
@@ -35,36 +41,33 @@ $(document).ready(function() {
                 spinner.hide()
                 ctx.show()
                 // if the chart is not undefined then destory the old one so we can create a new one later
-                if (barChart) {
-                    barChart.destroy();
+                if (pieChart) {
+                    pieChart.destroy();
                 }
                 // Create chart
-                barChart = new Chart(ctx, {
-                    type: 'bar',
+                pieChart = new Chart(ctx, {
+                    type: 'pie',
                     options: {
                         responsive: true,
                         title: {
                             display: false
                         },
-                        tooltips: {
-                            mode: 'index',
-                            intersect: true
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
                         }
                     }
                 })
 
                 // Fill chart with response
-                barChart.data = {
+                pieChart.data = {
                     labels: response.labels,
                     datasets: response.datasets
                 }
 
-                barChart.update()
+                pieChart.update()
             },
             error:function(error) {console.log(error)}
         })
     }
-
-    // Initialize chart data when document is ready
-    renderChart()
 })

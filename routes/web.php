@@ -69,6 +69,7 @@ Route::group(['prefix' => 'api'], function () {
     // Api\\SectorsController
     // endpoint : /api/sectors/...
     Route::group(['prefix' => 'sectors'], function () {
+        Route::get('', 'Api\\SectorsController@index')->name('api.sectors');
         Route::get('folder/{Folder}', 'Api\\SectorsController@sectorsByFolder')->name('api.sectors.byFolder');
     });
 
