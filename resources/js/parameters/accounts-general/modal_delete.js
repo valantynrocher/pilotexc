@@ -16,7 +16,11 @@
                     modal.modal('hide')
                     location.reload()
                 },
-                error: function(error) {console.log(error.responseText.message)}
+                error: function(error) {
+                    console.log(error)
+                    alert('Suppression impossible. Une ou plusieurs écritures comptables sont liées à ce compte.')
+                    modal.modal('hide')
+                }
             })
         })
     })
