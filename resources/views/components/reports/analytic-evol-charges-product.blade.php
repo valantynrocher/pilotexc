@@ -12,20 +12,16 @@
                     <div class="col-sm-9">
                         <select name="sector" class="form-control sector-select" id="analyticalEvolutionChartFilter">
                             <option value="0" selected>TOUS</option>
-                            {{-- @foreach ($sectorOp as $op)
-                                <option value="{{$op->id}}">{{$op->name}}</option>
-                                @endforeach --}}
-                            </select>
-                        </div>
+                        </select>
                     </div>
                 </div>
             </form>
-            <div class="text-center" id="chartDiv">
-                <div class="spinner-grow text-info" id="spinner1" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <canvas id="analyticalEvolutionChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="spinner-grow text-info" id="spinner1" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
+            <canvas id="analyticalEvolutionChart" width="520px" height="400px" style="padding: 15px"></canvas>
         </div>
     </div>
 </div>

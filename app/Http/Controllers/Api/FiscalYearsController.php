@@ -16,7 +16,7 @@ class FiscalYearsController extends Controller
     public function index()
     {
         $data = FiscalYear::orderBy('year_start', 'asc')->get();
-        return $data->toJson();
+        return response()->json($data);
     }
 
     public function store(Request $request)
@@ -48,7 +48,7 @@ class FiscalYearsController extends Controller
     public function edit($id)
     {
         $data = FiscalYear::find($id);
-        return $data->toJson();
+        return response()->json($data);
     }
 
     /**
@@ -73,7 +73,7 @@ class FiscalYearsController extends Controller
     public function getInProgress()
     {
         $data = FiscalYear::where('status', 'En cours')->get();
-        return $data->toJson();
+        return response()->json($data);
     }
 
     /**
@@ -81,10 +81,10 @@ class FiscalYearsController extends Controller
     */
     public function getLastFive()
     {
-        $data = FiscalYear::orderBy('year_start', 'asc')
+        $data = FiscalYear::orderBy('year_start', 'desc')
         ->take(5)
         ->get();
 
-        return $data->toJson();
+        return response()->json($data);
     }
 }
