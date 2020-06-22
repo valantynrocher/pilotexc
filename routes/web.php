@@ -25,7 +25,7 @@ Auth::routes();
 Route::get('tableau-de-bord', 'DashboardController@index')->name('dashboard');
 Route::get('ecritures', 'ScripturesController@index')->name('scriptures');
 Route::group(['prefix' => 'parametres'], function () {
-    Route::get('generalites', 'ParametersController@index')->name('parameters');
+    Route::redirect('', 'parametres/exercices-comptables');
     Route::get('exercices-comptables', 'ParametersController@fiscalYears')->name('parameters.fiscalYears');
     Route::get('plan-comptes-general', 'ParametersController@generalAccounts')->name('parameters.generalAccounts');
     Route::get('plan-compte-analytique', 'ParametersController@analyticAccounts')->name('parameters.analyticAccounts');

@@ -222,11 +222,11 @@ return [
             'text' => 'Paramètres',
             'icon' => 'fas fa-cogs',
             'submenu' => [
-                [
-                    'text' => 'Généralités',
-                    'icon' => 'fas fa-tools',
-                    'url'  => 'parametres/generalites',
-                ],
+                // [
+                //     'text' => 'Généralités',
+                //     'icon' => 'fas fa-tools',
+                //     'url'  => 'parametres/generalites',
+                // ],
                 [
                     'text' => 'Exercices comptables',
                     'icon'    => 'far fa-calendar-alt',
