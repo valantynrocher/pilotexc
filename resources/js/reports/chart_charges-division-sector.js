@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    let ctx = $('#analyticSectorDivision')
+    let ctx = $('#chargesDivisionChart')
     let spinner = ctx.siblings()
-    let filter = $('#analyticSectorDivisionFilter')
+    let filter = $('#chargesDivisionChartFilter')
     let chart
     let filterDefaultValue
 
@@ -28,11 +28,12 @@ $(document).ready(function() {
         renderChart(fiscalYearId)
     })
 
+
     // Render Chart JS element
     let renderChart = function(fiscalYearId) {
         $.ajax({
             type: 'GET',
-            url: `/api/reports/analyticalSectorDivisionChart/fiscalYear/${fiscalYearId}`,
+            url: `/api/reports/chargesDivisionChart/fiscalYear/${fiscalYearId}`,
             dataType: 'JSON',
             beforeSend: function() {
                 spinner.show()
@@ -46,15 +47,15 @@ $(document).ready(function() {
                 }
                 // Create chart
                 chart = new Chart(ctx, {
-                    type: 'bar',
+                    type: 'pie',
                     options: {
                         responsive: true,
                         title: {
                             display: false
                         },
-                        tooltips: {
-                            mode: 'index',
-                            intersect: true
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
                         }
                     }
                 })

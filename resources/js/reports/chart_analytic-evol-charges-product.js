@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    let spinner = $('#spinner1')
     let ctx = $('#analyticalEvolutionChart')
+    let spinner = ctx.siblings()
     let filter = $('#analyticalEvolutionChartFilter')
     let chart
 
